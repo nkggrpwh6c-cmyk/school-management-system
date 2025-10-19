@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Upload SF10 Excel - School Management System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="fas fa-file-excel me-2"></i>Upload SF10 Excel File</h2>
+            <a href="{% url 'documents:sf10_download_template' %}" class="btn btn-outline-primary">
+                <i class="fas fa-download me-2"></i>Download Template
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-upload me-2"></i>Upload SF10 Excel File</h5>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="{{ form.name.id_for_label }}" class="form-label">Upload Name</label>
+                        {{ form.name }}
+                        <div class="form-text">Give this upload a descriptive name (e.g., "SF10 Batch 2024")</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.excel_file.id_for_label }}" class="form-label">Excel File</label>
+                        {{ form.excel_file }}
+                        <div class="form-text">Upload an Excel file with SF10 data</div>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-upload me-2"></i>Upload and Process SF10
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>SF10 Upload Instructions</h5>
+            </div>
+            <div class="card-body">
+                <h6>Excel File Format:</h6>
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-check text-success me-2"></i><strong>student_id</strong> - Student ID number</li>
+                    <li><i class="fas fa-check text-success me-2"></i><strong>lrn</strong> - Learner Reference Number</li>
+                    <li><i class="fas fa-check text-success me-2"></i><strong>first_name</strong> - Student first name</li>
+                    <li><i class="fas fa-check text-success me-2"></i><strong>last_name</strong> - Student last name</li>
+                    <li><i class="fas fa-check text-success me-2"></i><strong>birth_date</strong> - Birth date (YYYY-MM-DD)</li>
+                    <li><i class="fas fa-check text-success me-2"></i><strong>birth_place</strong> - Birth place</li>
+                    <li><i class="fas fa-check text-success me-2"></i><strong>sex</strong> - M or F</li>
+                    <li><i class="fas fa-check text-success me-2"></i><strong>age</strong> - Student age</li>
+                    <li><i class="fas fa-check text-success me-2"></i><strong>present_address</strong> - Current address</li>
+                    <li><i class="fas fa-check text-success me-2"></i><strong>permanent_address</strong> - Permanent address</li>
+                    <li><i class="fas fa-check text-success me-2"></i><strong>contact_number</strong> - Phone number</li>
+                    <li><i class="fas fa-check text-success me-2"></i><strong>email</strong> - Email address</li>
+                    <li><i class="fas fa-check text-success me-2"></i><strong>father_name</strong> - Father's name</li>
+                    <li><i class="fas fa-check text-success me-2"></i><strong>mother_name</strong> - Mother's name</li>
+                    <li><i class="fas fa-check text-success me-2"></i><strong>school_year</strong> - School year (e.g., 2023-2024)</li>
+                    <li><i class="fas fa-check text-success me-2"></i><strong>grade_level</strong> - Grade level (e.g., Grade 12)</li>
+                </ul>
+                
+                <hr>
+                
+                <h6>Tips:</h6>
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-lightbulb text-warning me-2"></i>Use the template for correct format</li>
+                    <li><i class="fas fa-lightbulb text-warning me-2"></i>Ensure LRN is unique for each student</li>
+                    <li><i class="fas fa-lightbulb text-warning me-2"></i>Use YYYY-MM-DD format for dates</li>
+                    <li><i class="fas fa-lightbulb text-warning me-2"></i>System will create students if not found</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="card mt-3">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-download me-2"></i>Download Template</h5>
+            </div>
+            <div class="card-body text-center">
+                <p class="text-muted">Get the Excel template with the correct format and sample data.</p>
+                <a href="{% url 'documents:sf10_download_template' %}" class="btn btn-outline-primary">
+                    <i class="fas fa-download me-2"></i>Download SF10 Template
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

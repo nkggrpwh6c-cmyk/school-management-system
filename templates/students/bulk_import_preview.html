@@ -1,0 +1,254 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Import Preview{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0 text-gray-800">
+            <i class="fas fa-eye text-primary me-2"></i>
+            Import Preview
+        </h1>
+        <a href="{% url 'students:bulk_import_upload' %}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i>Back to Upload
+        </a>
+    </div>
+
+    <!-- Import Summary -->
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Total Rows
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_rows }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-list fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Valid Rows
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ success_count }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-check-circle fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-danger shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                                Errors
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ error_count }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-exclamation-triangle fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                File Name
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800 text-truncate">
+                                {{ import_data.file_name|truncatechars:20 }}
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-file-csv fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Preview Data -->
+    <div class="row">
+        <div class="col-lg-8 mb-4">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Data Preview (First 10 Rows)</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Row</th>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Email</th>
+                                    <th>LRN</th>
+                                    <th>Grade</th>
+                                    <th>Section</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in preview_data %}
+                                <tr>
+                                    <td>{{ item.row_number }}</td>
+                                    <td>{{ item.data.first_name }}</td>
+                                    <td>{{ item.data.last_name }}</td>
+                                    <td>{{ item.data.email }}</td>
+                                    <td>{{ item.data.lrn }}</td>
+                                    <td>{{ item.data.grade_level }}</td>
+                                    <td>{{ item.data.section }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="7" class="text-center text-muted">No data to preview</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Errors and Actions -->
+        <div class="col-lg-4 mb-4">
+            <!-- Errors -->
+            {% if error_count > 0 %}
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 bg-danger text-white">
+                    <h6 class="m-0 font-weight-bold">Validation Errors</h6>
+                </div>
+                <div class="card-body">
+                    <div class="small">
+                        {% for error in import_data.errors %}
+                        <div class="mb-2 p-2 bg-light border-left-danger">
+                            <strong>Row {{ error.row }}:</strong>
+                            <ul class="mb-0">
+                                {% for err in error.errors %}
+                                <li>{{ err }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Confirmation Form -->
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Confirm Import</h6>
+                </div>
+                <div class="card-body">
+                    {% if success_count > 0 %}
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <div class="form-check">
+                                {{ form.confirm_import }}
+                                <label class="form-check-label fw-bold" for="{{ form.confirm_import.id_for_label }}">
+                                    Confirm Import of {{ success_count }} Students
+                                </label>
+                            </div>
+                        </div>
+
+                        {% if error_count > 0 %}
+                        <div class="mb-3">
+                            <div class="form-check">
+                                {{ form.skip_errors }}
+                                <label class="form-check-label" for="{{ form.skip_errors.id_for_label }}">
+                                    Skip Rows with Errors
+                                </label>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="fas fa-check me-2"></i>
+                                Import Students
+                            </button>
+                        </div>
+                    </form>
+                    {% else %}
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        No valid data found to import. Please check your file and try again.
+                    </div>
+                    <a href="{% url 'students:bulk_import_upload' %}" class="btn btn-primary">
+                        <i class="fas fa-upload me-2"></i>
+                        Upload New File
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import Summary -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Import Summary</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="text-success">Valid Data:</h6>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check text-success me-2"></i>{{ success_count }} students ready for import</li>
+                                <li><i class="fas fa-check text-success me-2"></i>All required fields present</li>
+                                <li><i class="fas fa-check text-success me-2"></i>No duplicate LRNs or emails</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            {% if error_count > 0 %}
+                            <h6 class="text-danger">Issues Found:</h6>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-exclamation-triangle text-warning me-2"></i>{{ error_count }} rows with errors</li>
+                                <li><i class="fas fa-info-circle text-info me-2"></i>Errors will be skipped if option is selected</li>
+                            </ul>
+                            {% else %}
+                            <h6 class="text-success">No Issues:</h6>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check text-success me-2"></i>All data is valid</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Ready for import</li>
+                            </ul>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

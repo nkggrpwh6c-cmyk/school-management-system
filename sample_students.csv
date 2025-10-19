@@ -1,0 +1,4 @@
+first_name,last_name,email,lrn,grade_level,section,middle_name,date_of_birth,gender,address,phone_number,parent_name,parent_phone,parent_email,emergency_contact,emergency_phone,blood_type,medical_conditions,allergies
+John,Doe,john.doe@email.com,123456789012,7,A,Michael,2005-01-15,Male,123 Main St,09123456789,John Doe Sr.,09123456788,parent@email.com,Emergency Contact,09123456787,O+,None,None
+Jane,Smith,jane.smith@email.com,123456789013,7,A,Marie,2005-03-20,Female,456 Oak Ave,09123456790,Jane Smith Sr.,09123456791,parent2@email.com,Emergency Contact 2,09123456792,A+,Asthma,Peanuts
+Mike,Johnson,mike.johnson@email.com,123456789014,7,B,James,2005-05-10,Male,789 Pine St,09123456793,Mike Johnson Sr.,09123456794,parent3@email.com,Emergency Contact 3,09123456795,B+,None,None

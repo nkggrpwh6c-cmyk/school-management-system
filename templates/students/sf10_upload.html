@@ -1,0 +1,216 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}SF10 Bulk Upload - Registrar{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 mb-0">
+                    <i class="fas fa-upload text-primary me-2"></i>
+                    SF10 Bulk Upload
+                </h1>
+                <div>
+                    <a href="{% url 'registrar:sf10_dashboard' %}" class="btn btn-outline-primary">
+                        <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload Instructions -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-left-info shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-info">Upload Instructions</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="text-primary">Supported File Formats:</h6>
+                            <ul>
+                                <li>Excel files (.xlsx, .xls)</li>
+                                <li>CSV files (.csv)</li>
+                            </ul>
+                            
+                            <h6 class="text-primary">Required Columns:</h6>
+                            <ul>
+                                <li>Student ID</li>
+                                <li>LRN (Learner Reference Number)</li>
+                                <li>Name</li>
+                                <li>School Year</li>
+                                <li>Grade Level</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-primary">Optional Columns:</h6>
+                            <ul>
+                                <li>Section, Birth Date, Birth Place</li>
+                                <li>Sex, Age, Present Address</li>
+                                <li>Permanent Address, Contact Number</li>
+                                <li>Email, Father/Mother Information</li>
+                                <li>Guardian Information, Previous School</li>
+                                <li>Date of Enrollment/Graduation</li>
+                            </ul>
+                            
+                            <div class="mt-3">
+                                <a href="{% url 'registrar:sf10_download_template' %}" class="btn btn-info btn-sm">
+                                    <i class="fas fa-download me-1"></i> Download Template
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload Form -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Upload SF10 Excel File</h6>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.name.id_for_label }}" class="form-label">Upload Name</label>
+                                {{ form.name }}
+                                {% if form.name.errors %}
+                                    <div class="text-danger">{{ form.name.errors }}</div>
+                                {% endif %}
+                                <div class="form-text">Give this upload a descriptive name</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.excel_file.id_for_label }}" class="form-label">Excel File</label>
+                                {{ form.excel_file }}
+                                {% if form.excel_file.errors %}
+                                    <div class="text-danger">{{ form.excel_file.errors }}</div>
+                                {% endif %}
+                                <div class="form-text">Select the Excel file containing SF10 data</div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="d-flex justify-content-between">
+                                    <a href="{% url 'registrar:sf10_dashboard' %}" class="btn btn-secondary">
+                                        <i class="fas fa-times me-1"></i> Cancel
+                                    </a>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-upload me-1"></i> Upload and Process
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Uploads -->
+    {% if recent_uploads %}
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Recent Uploads</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Upload Name</th>
+                                    <th>File</th>
+                                    <th>Total Records</th>
+                                    <th>Processed</th>
+                                    <th>Failed</th>
+                                    <th>Status</th>
+                                    <th>Created</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for upload in recent_uploads %}
+                                <tr>
+                                    <td>{{ upload.name }}</td>
+                                    <td>{{ upload.excel_file.name|slice:"15:" }}</td>
+                                    <td>{{ upload.total_records }}</td>
+                                    <td>{{ upload.processed_records }}</td>
+                                    <td>{{ upload.failed_records }}</td>
+                                    <td>
+                                        <span class="badge badge-{% if upload.status == 'completed' %}success{% elif upload.status == 'failed' %}danger{% elif upload.status == 'processing' %}warning{% else %}info{% endif %}">
+                                            {{ upload.get_status_display }}
+                                        </span>
+                                    </td>
+                                    <td>{{ upload.created_at|date:"M d, Y H:i" }}</td>
+                                    <td>
+                                        {% if upload.excel_file %}
+                                            <a href="{{ upload.excel_file.url }}" class="btn btn-sm btn-info" title="Download File" target="_blank">
+                                                <i class="fas fa-download"></i>
+                                            </a>
+                                        {% endif %}
+                                        {% if upload.error_log %}
+                                            <button class="btn btn-sm btn-warning" title="View Errors" data-toggle="modal" data-target="#errorModal{{ upload.id }}">
+                                                <i class="fas fa-exclamation-triangle"></i>
+                                            </button>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Pandas Availability Notice -->
+    {% if not pandas_available %}
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="alert alert-warning">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                <strong>Note:</strong> Excel processing requires pandas library. CSV uploads are still available.
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Error Modals -->
+{% for upload in recent_uploads %}
+{% if upload.error_log %}
+<div class="modal fade" id="errorModal{{ upload.id }}" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Upload Errors - {{ upload.name }}</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <pre class="bg-light p-3" style="max-height: 400px; overflow-y: auto;">{{ upload.error_log }}</pre>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endfor %}
+{% endblock %}

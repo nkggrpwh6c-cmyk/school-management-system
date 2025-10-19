@@ -1,0 +1,24 @@
+<!-- Add this to the admin base template or create a custom admin dashboard -->
+<div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">
+            <i class="fas fa-upload me-2"></i>
+            Bulk Import Students
+        </h5>
+    </div>
+    <div class="card-body">
+        <p class="card-text">
+            Import large numbers of students efficiently using Excel or CSV files.
+        </p>
+        <div class="d-grid gap-2 d-md-flex">
+            <a href="{% url 'students:bulk_import_dashboard' %}" class="btn btn-primary">
+                <i class="fas fa-upload me-2"></i>
+                Start Bulk Import
+            </a>
+            <a href="{% url 'students:download_template' %}" class="btn btn-outline-success">
+                <i class="fas fa-download me-2"></i>
+                Download Template
+            </a>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,184 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}SF10 Documents List - Registrar{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 mb-0">
+                    <i class="fas fa-list text-primary me-2"></i>
+                    SF10 Documents
+                </h1>
+                <div>
+                    <a href="{% url 'registrar:sf10_dashboard' %}" class="btn btn-outline-primary">
+                        <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+                    </a>
+                    <a href="{% url 'registrar:sf10_create' %}" class="btn btn-primary">
+                        <i class="fas fa-plus me-1"></i> Create SF10
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search and Filters -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Search and Filters</h6>
+                </div>
+                <div class="card-body">
+                    <form method="get" class="row g-3">
+                        <div class="col-md-3">
+                            <label for="{{ search_form.search.id_for_label }}" class="form-label">Search</label>
+                            {{ search_form.search }}
+                        </div>
+                        <div class="col-md-3">
+                            <label for="{{ search_form.school_year.id_for_label }}" class="form-label">School Year</label>
+                            {{ search_form.school_year }}
+                        </div>
+                        <div class="col-md-3">
+                            <label for="{{ search_form.grade_level.id_for_label }}" class="form-label">Grade Level</label>
+                            {{ search_form.grade_level }}
+                        </div>
+                        <div class="col-md-3">
+                            <label for="{{ search_form.status.id_for_label }}" class="form-label">Status</label>
+                            {{ search_form.status }}
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-search me-1"></i> Search
+                            </button>
+                            <a href="{% url 'registrar:sf10_list' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-times me-1"></i> Clear
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SF10 Documents List -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">SF10 Documents ({{ page_obj.paginator.count }} total)</h6>
+                </div>
+                <div class="card-body">
+                    {% if page_obj %}
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>LRN</th>
+                                        <th>Grade Level</th>
+                                        <th>Section</th>
+                                        <th>School Year</th>
+                                        <th>Status</th>
+                                        <th>Complete</th>
+                                        <th>Created</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for sf10 in page_obj %}
+                                    <tr>
+                                        <td>
+                                            <strong>{{ sf10.name }}</strong>
+                                            {% if sf10.student %}
+                                                <br><small class="text-muted">Student: {{ sf10.student.user.get_full_name }}</small>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ sf10.lrn }}</td>
+                                        <td>{{ sf10.grade_level }}</td>
+                                        <td>{{ sf10.section|default:"-" }}</td>
+                                        <td>{{ sf10.school_year }}</td>
+                                        <td>
+                                            <span class="badge badge-{% if sf10.status == 'active' %}success{% elif sf10.status == 'transferred' %}info{% elif sf10.status == 'draft' %}warning{% else %}secondary{% endif %}">
+                                                {{ sf10.get_status_display }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            {% if sf10.is_complete %}
+                                                <span class="badge badge-success">Complete</span>
+                                            {% else %}
+                                                <span class="badge badge-warning">Incomplete</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ sf10.created_at|date:"M d, Y" }}</td>
+                                        <td>
+                                            <div class="btn-group" role="group">
+                                                <a href="{% url 'registrar:sf10_detail' sf10.pk %}" class="btn btn-sm btn-info" title="View Details">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                <a href="{% url 'registrar:sf10_edit' sf10.pk %}" class="btn btn-sm btn-warning" title="Edit">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                {% if sf10.excel_file %}
+                                                    <a href="{{ sf10.excel_file.url }}" class="btn btn-sm btn-success" title="Download Excel" target="_blank">
+                                                        <i class="fas fa-file-excel"></i>
+                                                    </a>
+                                                {% endif %}
+                                                {% if sf10.pdf_file %}
+                                                    <a href="{{ sf10.pdf_file.url }}" class="btn btn-sm btn-danger" title="Download PDF" target="_blank">
+                                                        <i class="fas fa-file-pdf"></i>
+                                                    </a>
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Pagination -->
+                        {% if page_obj.has_other_pages %}
+                        <nav aria-label="SF10 documents pagination">
+                            <ul class="pagination justify-content-center">
+                                {% if page_obj.has_previous %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page=1{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.school_year %}&school_year={{ request.GET.school_year }}{% endif %}{% if request.GET.grade_level %}&grade_level={{ request.GET.grade_level }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}">First</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.school_year %}&school_year={{ request.GET.school_year }}{% endif %}{% if request.GET.grade_level %}&grade_level={{ request.GET.grade_level }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}">Previous</a>
+                                    </li>
+                                {% endif %}
+
+                                <li class="page-item active">
+                                    <span class="page-link">
+                                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                                    </span>
+                                </li>
+
+                                {% if page_obj.has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.school_year %}&school_year={{ request.GET.school_year }}{% endif %}{% if request.GET.grade_level %}&grade_level={{ request.GET.grade_level }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}">Next</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.school_year %}&school_year={{ request.GET.school_year }}{% endif %}{% if request.GET.grade_level %}&grade_level={{ request.GET.grade_level }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}">Last</a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                        {% endif %}
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-file-alt fa-3x text-gray-300 mb-3"></i>
+                            <p class="text-muted">No SF10 documents found matching your criteria.</p>
+                            <a href="{% url 'registrar:sf10_create' %}" class="btn btn-primary">Create First SF10</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

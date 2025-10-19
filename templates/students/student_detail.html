@@ -1,0 +1,535 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ student.full_name }} - Student Details{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0 text-gray-800">
+            <i class="fas fa-user-graduate text-primary me-2"></i>
+            {{ student.full_name }}
+        </h1>
+            <div class="btn-group">
+            <a href="{% url 'registrar:student_edit' student.student_id %}" class="btn btn-warning">
+                <i class="fas fa-edit me-1"></i>Edit
+            </a>
+            <a href="{% url 'registrar:student_search' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left me-1"></i>Back to Search
+            </a>
+    </div>
+</div>
+
+    <!-- Student Header Card -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-2 text-center">
+                            <div class="avatar-lg bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3">
+                                {{ student.first_name|first }}{{ student.last_name|first }}
+            </div>
+                            <h5 class="mb-0">{{ student.full_name }}</h5>
+                            <p class="text-muted small">{{ student.student_id }}</p>
+                    </div>
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <p class="mb-1"><strong>LRN:</strong> {{ student.lrn }}</p>
+                                    <p class="mb-1"><strong>Grade:</strong> Grade {{ student.grade_level }} - {{ student.section }}</p>
+                                    {% if student.strand %}
+                                    <p class="mb-1"><strong>Strand:</strong> {{ student.strand }}</p>
+                {% endif %}
+                                    <p class="mb-1"><strong>Status:</strong> 
+                                        <span class="badge badge-{% if student.status == 'ACTIVE' %}success{% elif student.status == 'GRADUATED' %}info{% elif student.status == 'TRANSFERRED' %}warning{% else %}danger{% endif %}">
+                                            {{ student.get_status_display }}
+                    </span>
+                                    </p>
+                                </div>
+                                <div class="col-sm-6">
+                                    <p class="mb-1"><strong>Gender:</strong> {{ student.get_gender_display }}</p>
+                                    <p class="mb-1"><strong>Age:</strong> {{ student.age }} years old</p>
+                                    <p class="mb-1"><strong>Birth Date:</strong> {{ student.date_of_birth|date:"M d, Y" }}</p>
+                                    <p class="mb-1"><strong>Admission:</strong> {{ student.admission_date|date:"M d, Y" }}</p>
+                </div>
+            </div>
+        </div>
+                        <div class="col-md-4">
+                            <div class="text-end">
+                                <h6 class="text-muted">Quick Actions</h6>
+                                <div class="btn-group-vertical w-100">
+                                    <button class="btn btn-outline-primary btn-sm mb-2" onclick="alert('Document Upload - Coming Soon!')">
+                                        <i class="fas fa-upload me-2"></i>Upload Document
+                                    </button>
+                                    <button class="btn btn-outline-success btn-sm mb-2" onclick="alert('Form 137/138 Generation - Coming Soon!')">
+                                        <i class="fas fa-file-alt me-2"></i>Generate Forms
+                                    </button>
+                                    <button class="btn btn-outline-info btn-sm" onclick="alert('Grade Management - Coming Soon!')">
+                                        <i class="fas fa-chart-line me-2"></i>View Grades
+                                    </button>
+                                </div>
+            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Content Tabs -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <ul class="nav nav-tabs card-header-tabs" id="studentTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="personal-tab" data-bs-toggle="tab" data-bs-target="#personal" type="button" role="tab">
+                                <i class="fas fa-user me-2"></i>Personal Info
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="family-tab" data-bs-toggle="tab" data-bs-target="#family" type="button" role="tab">
+                                <i class="fas fa-users me-2"></i>Family Info
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="academic-tab" data-bs-toggle="tab" data-bs-target="#academic" type="button" role="tab">
+                                <i class="fas fa-graduation-cap me-2"></i>Academic Info
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="documents-tab" data-bs-toggle="tab" data-bs-target="#documents" type="button" role="tab">
+                                <i class="fas fa-folder me-2"></i>Documents
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="grades-tab" data-bs-toggle="tab" data-bs-target="#grades" type="button" role="tab">
+                                <i class="fas fa-chart-line me-2"></i>Grades
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#history" type="button" role="tab">
+                                <i class="fas fa-history me-2"></i>History
+                            </button>
+                        </li>
+                    </ul>
+            </div>
+            <div class="card-body">
+                    <div class="tab-content" id="studentTabsContent">
+                        <!-- Personal Information -->
+                        <div class="tab-pane fade show active" id="personal" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-6">
+                                    <h6 class="text-primary mb-3">Basic Information</h6>
+                                    <table class="table table-borderless">
+                                        <tr>
+                                            <td><strong>Full Name:</strong></td>
+                                            <td>{{ student.full_name }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Gender:</strong></td>
+                                            <td>{{ student.get_gender_display }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Birth Date:</strong></td>
+                                            <td>{{ student.date_of_birth|date:"F d, Y" }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Age:</strong></td>
+                                            <td>{{ student.age }} years old</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Place of Birth:</strong></td>
+                                            <td>{{ student.place_of_birth|default:"Not specified" }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Nationality:</strong></td>
+                                            <td>{{ student.nationality }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Religion:</strong></td>
+                                            <td>{{ student.religion|default:"Not specified" }}</td>
+                                        </tr>
+                                    </table>
+                    </div>
+                    <div class="col-md-6">
+                                    <h6 class="text-primary mb-3">Contact Information</h6>
+                                    <table class="table table-borderless">
+                                        <tr>
+                                            <td><strong>Address:</strong></td>
+                                            <td>{{ student.address }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Phone:</strong></td>
+                                            <td>{{ student.phone_number|default:"Not provided" }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Email:</strong></td>
+                                            <td>{{ student.email|default:"Not provided" }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Emergency Contact:</strong></td>
+                                            <td>{{ student.emergency_contact|default:"Not provided" }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Emergency Phone:</strong></td>
+                                            <td>{{ student.emergency_phone|default:"Not provided" }}</td>
+                                        </tr>
+                                    </table>
+                    </div>
+                </div>
+                            
+                            {% if student.blood_type or student.medical_conditions or student.allergies %}
+                            <hr>
+                            <h6 class="text-primary mb-3">Medical Information</h6>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <p><strong>Blood Type:</strong> {{ student.blood_type|default:"Not specified" }}</p>
+                                </div>
+                                <div class="col-md-8">
+                {% if student.medical_conditions %}
+                    <p><strong>Medical Conditions:</strong> {{ student.medical_conditions }}</p>
+                {% endif %}
+                                    {% if student.allergies %}
+                                    <p><strong>Allergies:</strong> {{ student.allergies }}</p>
+                                    {% endif %}
+            </div>
+                            </div>
+                            {% endif %}
+        </div>
+        
+                        <!-- Family Information -->
+                        <div class="tab-pane fade" id="family" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-6">
+                                    <h6 class="text-primary mb-3">Father's Information</h6>
+                                    <table class="table table-borderless">
+                                        <tr>
+                                            <td><strong>Name:</strong></td>
+                                            <td>{{ student.father_name|default:"Not provided" }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Occupation:</strong></td>
+                                            <td>{{ student.father_occupation|default:"Not provided" }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Phone:</strong></td>
+                                            <td>{{ student.father_phone|default:"Not provided" }}</td>
+                                        </tr>
+                                    </table>
+                    </div>
+                    <div class="col-md-6">
+                                    <h6 class="text-primary mb-3">Mother's Information</h6>
+                                    <table class="table table-borderless">
+                                        <tr>
+                                            <td><strong>Name:</strong></td>
+                                            <td>{{ student.mother_name|default:"Not provided" }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Occupation:</strong></td>
+                                            <td>{{ student.mother_occupation|default:"Not provided" }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Phone:</strong></td>
+                                            <td>{{ student.mother_phone|default:"Not provided" }}</td>
+                                        </tr>
+                                    </table>
+            </div>
+        </div>
+        
+                            {% if student.guardian_name %}
+                            <hr>
+                            <h6 class="text-primary mb-3">Guardian Information</h6>
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td><strong>Name:</strong></td>
+                                    <td>{{ student.guardian_name }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Relationship:</strong></td>
+                                    <td>{{ student.guardian_relationship|default:"Not specified" }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Phone:</strong></td>
+                                    <td>{{ student.guardian_phone|default:"Not provided" }}</td>
+                                </tr>
+                            </table>
+                            {% endif %}
+                        </div>
+
+                        <!-- Academic Information -->
+                        <div class="tab-pane fade" id="academic" role="tabpanel">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6 class="text-primary mb-3">Academic Details</h6>
+                                    <table class="table table-borderless">
+                                        <tr>
+                                            <td><strong>Student ID:</strong></td>
+                                            <td>{{ student.student_id }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>LRN:</strong></td>
+                                            <td>{{ student.lrn }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Grade Level:</strong></td>
+                                            <td>Grade {{ student.grade_level }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Section:</strong></td>
+                                            <td>{{ student.section }}</td>
+                                        </tr>
+                                        {% if student.strand %}
+                                        <tr>
+                                            <td><strong>Strand:</strong></td>
+                                            <td>{{ student.strand }}</td>
+                                        </tr>
+                                        {% endif %}
+                                        <tr>
+                                            <td><strong>Academic Year:</strong></td>
+                                            <td>{{ student.academic_year }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Admission Date:</strong></td>
+                                            <td>{{ student.admission_date|date:"F d, Y" }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Status:</strong></td>
+                                            <td>
+                                                <span class="badge badge-{% if student.status == 'ACTIVE' %}success{% elif student.status == 'GRADUATED' %}info{% elif student.status == 'TRANSFERRED' %}warning{% else %}danger{% endif %}">
+                                                    {{ student.get_status_display }}
+                                        </span>
+                                    </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6 class="text-primary mb-3">System Information</h6>
+                                    <table class="table table-borderless">
+                                        <tr>
+                                            <td><strong>Created:</strong></td>
+                                            <td>{{ student.created_at|date:"F d, Y H:i" }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Created By:</strong></td>
+                                            <td>{{ student.created_by.get_full_name|default:"System" }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Last Updated:</strong></td>
+                                            <td>{{ student.updated_at|date:"F d, Y H:i" }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Updated By:</strong></td>
+                                            <td>{{ student.updated_by.get_full_name|default:"System" }}</td>
+                                </tr>
+                        </table>
+                    </div>
+            </div>
+        </div>
+        
+        <!-- Documents -->
+                        <div class="tab-pane fade" id="documents" role="tabpanel">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h6 class="text-primary mb-0">Student Documents</h6>
+                                <button class="btn btn-primary btn-sm" onclick="alert('Document Upload - Coming Soon!')">
+                                    <i class="fas fa-upload me-1"></i>Upload Document
+                                </button>
+            </div>
+                            
+                {% if documents %}
+                    <div class="table-responsive">
+                                <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Document Type</th>
+                                    <th>Title</th>
+                                            <th>Description</th>
+                                            <th>Uploaded By</th>
+                                            <th>Date</th>
+                                            <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for document in documents %}
+                                <tr>
+                                    <td>
+                                                <span class="badge bg-info">{{ document.get_document_type_display }}</span>
+                                    </td>
+                                    <td>{{ document.title }}</td>
+                                            <td>{{ document.description|truncatechars:50 }}</td>
+                                            <td>{{ document.uploaded_by.get_full_name }}</td>
+                                    <td>{{ document.uploaded_at|date:"M d, Y" }}</td>
+                                            <td>
+                                                {% if document.is_verified %}
+                                                <span class="badge bg-success">Verified</span>
+                                                {% else %}
+                                                <span class="badge bg-warning">Pending</span>
+                                                {% endif %}
+                                            </td>
+                                    <td>
+                                        <a href="{{ document.file.url }}" class="btn btn-sm btn-outline-primary" target="_blank">
+                                                    <i class="fas fa-download"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                            <div class="text-center py-4">
+                                <i class="fas fa-folder-open fa-3x text-gray-300 mb-3"></i>
+                                <h5 class="text-muted">No documents uploaded</h5>
+                                <p class="text-muted">Upload documents for this student</p>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Grades -->
+                        <div class="tab-pane fade" id="grades" role="tabpanel">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h6 class="text-primary mb-0">Academic Performance</h6>
+                                <button class="btn btn-success btn-sm" onclick="alert('Grade Management - Coming Soon!')">
+                                    <i class="fas fa-plus me-1"></i>Add Grade
+                                </button>
+                            </div>
+                            
+                            {% if grades %}
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Subject</th>
+                                            <th>Quarter</th>
+                                            <th>Academic Year</th>
+                                            <th>Grade</th>
+                                            <th>Remarks</th>
+                                            <th>Teacher</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for grade in grades %}
+                                        <tr>
+                                            <td>{{ grade.subject }}</td>
+                                            <td>Q{{ grade.quarter }}</td>
+                                            <td>{{ grade.academic_year }}</td>
+                                            <td>
+                                                <span class="badge badge-{% if grade.grade >= 90 %}success{% elif grade.grade >= 80 %}info{% elif grade.grade >= 75 %}warning{% else %}danger{% endif %}">
+                                                    {{ grade.grade }}
+                                                </span>
+                                            </td>
+                                            <td>{{ grade.remarks|default:"-" }}</td>
+                                            <td>{{ grade.teacher.get_full_name|default:"-" }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% else %}
+                            <div class="text-center py-4">
+                                <i class="fas fa-chart-line fa-3x text-gray-300 mb-3"></i>
+                                <h5 class="text-muted">No grades recorded</h5>
+                                <p class="text-muted">Grades will appear here once recorded</p>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- History -->
+                        <div class="tab-pane fade" id="history" role="tabpanel">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6 class="text-primary mb-3">Recent Changes</h6>
+                                    {% if audit_log %}
+                                    <div class="timeline">
+                                        {% for log in audit_log %}
+                                        <div class="timeline-item mb-3">
+                                            <div class="d-flex">
+                                                <div class="flex-shrink-0">
+                                                    <div class="timeline-marker bg-{% if log.action == 'CREATE' %}success{% elif log.action == 'UPDATE' %}warning{% elif log.action == 'DELETE' %}danger{% else %}info{% endif %}"></div>
+                                                </div>
+                                                <div class="flex-grow-1 ms-3">
+                                                    <h6 class="mb-1">{{ log.get_action_display }}</h6>
+                                                    <p class="mb-1 text-muted small">{{ log.remarks|default:log.field_changed }}</p>
+                                                    <small class="text-muted">
+                                                        by {{ log.changed_by.get_full_name }} • {{ log.changed_at|date:"M d, Y H:i" }}
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    {% else %}
+                                    <p class="text-muted">No recent changes</p>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-6">
+                                    <h6 class="text-primary mb-3">Access Log</h6>
+                                    {% if access_log %}
+                                    <div class="table-responsive">
+                                        <table class="table table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th>Accessed By</th>
+                                                    <th>Date</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for log in access_log %}
+                                                <tr>
+                                                    <td>{{ log.accessed_by.get_full_name }}</td>
+                                                    <td>{{ log.accessed_at|date:"M d, H:i" }}</td>
+                                                    <td>{{ log.action }}</td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    {% else %}
+                                    <p class="text-muted">No access records</p>
+                {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .avatar-lg {
+        width: 80px;
+        height: 80px;
+        font-size: 24px;
+        font-weight: bold;
+    }
+    
+    .timeline-marker {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        margin-top: 6px;
+    }
+    
+    .timeline-item {
+        border-left: 2px solid #e3e6f0;
+        padding-left: 20px;
+        position: relative;
+    }
+    
+    .timeline-item:before {
+        content: '';
+        position: absolute;
+        left: -6px;
+        top: 0;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #e3e6f0;
+    }
+</style>
+{% endblock %}

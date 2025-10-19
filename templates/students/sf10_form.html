@@ -1,0 +1,302 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ title }} - Registrar{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 mb-0">
+                    <i class="fas fa-{% if sf10_doc %}edit{% else %}plus{% endif %} text-primary me-2"></i>
+                    {{ title }}
+                </h1>
+                <div>
+                    <a href="{% url 'registrar:sf10_dashboard' %}" class="btn btn-outline-primary">
+                        <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">SF10 Document Information</h6>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <!-- Basic Information -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="text-primary mb-3">Basic Information</h5>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.student.id_for_label }}" class="form-label">Student</label>
+                                {{ form.student }}
+                                {% if form.student.errors %}
+                                    <div class="text-danger">{{ form.student.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.lrn.id_for_label }}" class="form-label">LRN (Learner Reference Number)</label>
+                                {{ form.lrn }}
+                                {% if form.lrn.errors %}
+                                    <div class="text-danger">{{ form.lrn.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.name.id_for_label }}" class="form-label">Full Name</label>
+                                {{ form.name }}
+                                {% if form.name.errors %}
+                                    <div class="text-danger">{{ form.name.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="{{ form.birth_date.id_for_label }}" class="form-label">Birth Date</label>
+                                {{ form.birth_date }}
+                                {% if form.birth_date.errors %}
+                                    <div class="text-danger">{{ form.birth_date.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="{{ form.age.id_for_label }}" class="form-label">Age</label>
+                                {{ form.age }}
+                                {% if form.age.errors %}
+                                    <div class="text-danger">{{ form.age.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.birth_place.id_for_label }}" class="form-label">Birth Place</label>
+                                {{ form.birth_place }}
+                                {% if form.birth_place.errors %}
+                                    <div class="text-danger">{{ form.birth_place.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.sex.id_for_label }}" class="form-label">Sex</label>
+                                {{ form.sex }}
+                                {% if form.sex.errors %}
+                                    <div class="text-danger">{{ form.sex.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Academic Information -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="text-primary mb-3">Academic Information</h5>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="{{ form.school_year.id_for_label }}" class="form-label">School Year</label>
+                                {{ form.school_year }}
+                                {% if form.school_year.errors %}
+                                    <div class="text-danger">{{ form.school_year.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="{{ form.grade_level.id_for_label }}" class="form-label">Grade Level</label>
+                                {{ form.grade_level }}
+                                {% if form.grade_level.errors %}
+                                    <div class="text-danger">{{ form.grade_level.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="{{ form.section.id_for_label }}" class="form-label">Section</label>
+                                {{ form.section }}
+                                {% if form.section.errors %}
+                                    <div class="text-danger">{{ form.section.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.previous_school.id_for_label }}" class="form-label">Previous School</label>
+                                {{ form.previous_school }}
+                                {% if form.previous_school.errors %}
+                                    <div class="text-danger">{{ form.previous_school.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.previous_grade.id_for_label }}" class="form-label">Previous Grade</label>
+                                {{ form.previous_grade }}
+                                {% if form.previous_grade.errors %}
+                                    <div class="text-danger">{{ form.previous_grade.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.date_of_enrollment.id_for_label }}" class="form-label">Date of Enrollment</label>
+                                {{ form.date_of_enrollment }}
+                                {% if form.date_of_enrollment.errors %}
+                                    <div class="text-danger">{{ form.date_of_enrollment.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.date_of_graduation.id_for_label }}" class="form-label">Date of Graduation</label>
+                                {{ form.date_of_graduation }}
+                                {% if form.date_of_graduation.errors %}
+                                    <div class="text-danger">{{ form.date_of_graduation.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Address Information -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="text-primary mb-3">Address Information</h5>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.present_address.id_for_label }}" class="form-label">Present Address</label>
+                                {{ form.present_address }}
+                                {% if form.present_address.errors %}
+                                    <div class="text-danger">{{ form.present_address.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.permanent_address.id_for_label }}" class="form-label">Permanent Address</label>
+                                {{ form.permanent_address }}
+                                {% if form.permanent_address.errors %}
+                                    <div class="text-danger">{{ form.permanent_address.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.contact_number.id_for_label }}" class="form-label">Contact Number</label>
+                                {{ form.contact_number }}
+                                {% if form.contact_number.errors %}
+                                    <div class="text-danger">{{ form.contact_number.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.email.id_for_label }}" class="form-label">Email</label>
+                                {{ form.email }}
+                                {% if form.email.errors %}
+                                    <div class="text-danger">{{ form.email.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Parent/Guardian Information -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="text-primary mb-3">Parent/Guardian Information</h5>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="{{ form.father_name.id_for_label }}" class="form-label">Father's Name</label>
+                                {{ form.father_name }}
+                                {% if form.father_name.errors %}
+                                    <div class="text-danger">{{ form.father_name.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="{{ form.father_occupation.id_for_label }}" class="form-label">Father's Occupation</label>
+                                {{ form.father_occupation }}
+                                {% if form.father_occupation.errors %}
+                                    <div class="text-danger">{{ form.father_occupation.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="{{ form.father_contact.id_for_label }}" class="form-label">Father's Contact</label>
+                                {{ form.father_contact }}
+                                {% if form.father_contact.errors %}
+                                    <div class="text-danger">{{ form.father_contact.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="{{ form.mother_name.id_for_label }}" class="form-label">Mother's Name</label>
+                                {{ form.mother_name }}
+                                {% if form.mother_name.errors %}
+                                    <div class="text-danger">{{ form.mother_name.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="{{ form.mother_occupation.id_for_label }}" class="form-label">Mother's Occupation</label>
+                                {{ form.mother_occupation }}
+                                {% if form.mother_occupation.errors %}
+                                    <div class="text-danger">{{ form.mother_occupation.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="{{ form.mother_contact.id_for_label }}" class="form-label">Mother's Contact</label>
+                                {{ form.mother_contact }}
+                                {% if form.mother_contact.errors %}
+                                    <div class="text-danger">{{ form.mother_contact.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="{{ form.guardian_name.id_for_label }}" class="form-label">Guardian's Name</label>
+                                {{ form.guardian_name }}
+                                {% if form.guardian_name.errors %}
+                                    <div class="text-danger">{{ form.guardian_name.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="{{ form.guardian_relationship.id_for_label }}" class="form-label">Guardian's Relationship</label>
+                                {{ form.guardian_relationship }}
+                                {% if form.guardian_relationship.errors %}
+                                    <div class="text-danger">{{ form.guardian_relationship.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="{{ form.guardian_contact.id_for_label }}" class="form-label">Guardian's Contact</label>
+                                {{ form.guardian_contact }}
+                                {% if form.guardian_contact.errors %}
+                                    <div class="text-danger">{{ form.guardian_contact.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Document Status -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="text-primary mb-3">Document Status</h5>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.status.id_for_label }}" class="form-label">Status</label>
+                                {{ form.status }}
+                                {% if form.status.errors %}
+                                    <div class="text-danger">{{ form.status.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="form-check mt-4">
+                                    {{ form.is_complete }}
+                                    <label class="form-check-label" for="{{ form.is_complete.id_for_label }}">
+                                        Document is Complete
+                                    </label>
+                                    {% if form.is_complete.errors %}
+                                        <div class="text-danger">{{ form.is_complete.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label for="{{ form.notes.id_for_label }}" class="form-label">Notes</label>
+                                {{ form.notes }}
+                                {% if form.notes.errors %}
+                                    <div class="text-danger">{{ form.notes.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="d-flex justify-content-between">
+                                    <a href="{% url 'registrar:sf10_dashboard' %}" class="btn btn-secondary">
+                                        <i class="fas fa-times me-1"></i> Cancel
+                                    </a>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save me-1"></i> Save SF10 Document
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

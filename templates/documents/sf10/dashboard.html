@@ -1,0 +1,195 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}SF10 Management - School Management System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="fas fa-file-alt me-2"></i>SF10 Document Management</h2>
+            <div class="btn-group">
+                <a href="{% url 'documents:sf10_create' %}" class="btn btn-primary">
+                    <i class="fas fa-plus me-2"></i>Add SF10
+                </a>
+                <a href="{% url 'documents:sf10_upload' %}" class="btn btn-success">
+                    <i class="fas fa-file-excel me-2"></i>Upload Excel
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card bg-primary text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4>{{ total_sf10 }}</h4>
+                        <p class="mb-0">Total SF10</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-file-alt fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card bg-success text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4>{{ active_sf10 }}</h4>
+                        <p class="mb-0">Active</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-check-circle fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card bg-warning text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4>{{ transferred_sf10 }}</h4>
+                        <p class="mb-0">Transferred</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-exchange-alt fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card bg-info text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4>{{ complete_sf10 }}</h4>
+                        <p class="mb-0">Complete</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-clipboard-check fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-bolt me-2"></i>Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <a href="{% url 'documents:sf10_list' %}" class="btn btn-outline-primary w-100 mb-2">
+                            <i class="fas fa-list me-2"></i>View All SF10
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="{% url 'documents:sf10_list' %}?status=active" class="btn btn-outline-success w-100 mb-2">
+                            <i class="fas fa-check-circle me-2"></i>Active SF10
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="{% url 'documents:sf10_list' %}?status=transferred" class="btn btn-outline-warning w-100 mb-2">
+                            <i class="fas fa-exchange-alt me-2"></i>Transferred
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="{% url 'documents:sf10_statistics' %}" class="btn btn-outline-info w-100 mb-2">
+                            <i class="fas fa-chart-bar me-2"></i>Statistics
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent SF10 Documents -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-clock me-2"></i>Recent SF10 Documents</h5>
+            </div>
+            <div class="card-body">
+                {% if recent_sf10 %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Student</th>
+                                    <th>LRN</th>
+                                    <th>School Year</th>
+                                    <th>Grade Level</th>
+                                    <th>Status</th>
+                                    <th>Date Created</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for sf10 in recent_sf10 %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ sf10.name }}</strong><br>
+                                        <small class="text-muted">{{ sf10.student.full_name }}</small>
+                                    </td>
+                                    <td>{{ sf10.lrn }}</td>
+                                    <td>{{ sf10.school_year }}</td>
+                                    <td>{{ sf10.grade_level }}</td>
+                                    <td>
+                                        {% if sf10.status == 'active' %}
+                                            <span class="badge bg-success">Active</span>
+                                        {% elif sf10.status == 'transferred' %}
+                                            <span class="badge bg-warning">Transferred</span>
+                                        {% elif sf10.status == 'draft' %}
+                                            <span class="badge bg-secondary">Draft</span>
+                                        {% else %}
+                                            <span class="badge bg-dark">{{ sf10.get_status_display }}</span>
+                                        {% endif %}
+                                        {% if sf10.is_complete %}
+                                            <span class="badge bg-info">Complete</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ sf10.created_at|date:"M d, Y" }}</td>
+                                    <td>
+                                        <a href="{% url 'documents:sf10_detail' sf10.pk %}" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-file-alt fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">No SF10 documents found.</p>
+                        <a href="{% url 'documents:sf10_create' %}" class="btn btn-primary">
+                            <i class="fas fa-plus me-2"></i>Add First SF10
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

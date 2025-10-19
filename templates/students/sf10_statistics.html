@@ -1,0 +1,289 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}SF10 Statistics - Registrar{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 mb-0">
+                    <i class="fas fa-chart-bar text-primary me-2"></i>
+                    SF10 Statistics & Analytics
+                </h1>
+                <div>
+                    <a href="{% url 'registrar:sf10_dashboard' %}" class="btn btn-outline-primary">
+                        <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Summary Statistics -->
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Total SF10 Documents
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_sf10 }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-file-alt fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Active Documents
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ active_sf10 }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-check-circle fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Transferred
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ transferred_sf10 }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-exchange-alt fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Complete Documents
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ complete_sf10 }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-clipboard-check fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Status Distribution -->
+    {% if status_distribution %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Status Distribution</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% for stat in status_distribution %}
+                        <div class="col-md-3 mb-3">
+                            <div class="card border-left-{% if stat.status == 'active' %}success{% elif stat.status == 'transferred' %}info{% elif stat.status == 'draft' %}warning{% else %}secondary{% endif %} shadow">
+                                <div class="card-body">
+                                    <div class="text-center">
+                                        <div class="h4 mb-0 font-weight-bold text-gray-800">{{ stat.count }}</div>
+                                        <div class="text-xs font-weight-bold text-uppercase mb-1">
+                                            {{ stat.status|title }}
+                                        </div>
+                                        <div class="text-xs text-muted">
+                                            {% if total_sf10 > 0 %}
+                                                {{ stat.count|floatformat:0|add:0|mul:100|div:total_sf10|floatformat:1 }}%
+                                            {% else %}
+                                                0%
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Grade Level Distribution -->
+    {% if grade_distribution %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Grade Level Distribution</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% for grade in grade_distribution %}
+                        <div class="col-md-2 mb-3">
+                            <div class="card border-left-primary shadow">
+                                <div class="card-body">
+                                    <div class="text-center">
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ grade.count }}</div>
+                                        <div class="text-xs font-weight-bold text-uppercase mb-1">
+                                            {{ grade.grade_level }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- School Year Distribution -->
+    {% if year_distribution %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">School Year Distribution</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% for year in year_distribution %}
+                        <div class="col-md-3 mb-3">
+                            <div class="card border-left-info shadow">
+                                <div class="card-body">
+                                    <div class="text-center">
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ year.count }}</div>
+                                        <div class="text-xs font-weight-bold text-uppercase mb-1">
+                                            {{ year.school_year }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Recent Activity -->
+    {% if recent_activity %}
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Recent Activity</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>LRN</th>
+                                    <th>Grade Level</th>
+                                    <th>School Year</th>
+                                    <th>Status</th>
+                                    <th>Complete</th>
+                                    <th>Created By</th>
+                                    <th>Created</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for activity in recent_activity %}
+                                <tr>
+                                    <td>{{ activity.name }}</td>
+                                    <td>{{ activity.lrn }}</td>
+                                    <td>{{ activity.grade_level }}</td>
+                                    <td>{{ activity.school_year }}</td>
+                                    <td>
+                                        <span class="badge badge-{% if activity.status == 'active' %}success{% elif activity.status == 'transferred' %}info{% elif activity.status == 'draft' %}warning{% else %}secondary{% endif %}">
+                                            {{ activity.get_status_display }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {% if activity.is_complete %}
+                                            <span class="badge badge-success">Complete</span>
+                                        {% else %}
+                                            <span class="badge badge-warning">Incomplete</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ activity.created_by.get_full_name }}</td>
+                                    <td>{{ activity.created_at|date:"M d, Y H:i" }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Export Options -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Export Options</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <a href="{% url 'registrar:sf10_download_template' %}" class="btn btn-info btn-block">
+                                <i class="fas fa-download me-2"></i> Download Template
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="{% url 'registrar:sf10_list' %}" class="btn btn-primary btn-block">
+                                <i class="fas fa-list me-2"></i> View All SF10
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="{% url 'registrar:sf10_upload' %}" class="btn btn-success btn-block">
+                                <i class="fas fa-upload me-2"></i> Bulk Upload
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="{% url 'registrar:sf10_create' %}" class="btn btn-warning btn-block">
+                                <i class="fas fa-plus me-2"></i> Create New
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

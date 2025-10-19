@@ -1,0 +1,216 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Download Template{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0 text-gray-800">
+            <i class="fas fa-download text-success me-2"></i>
+            Download Import Template
+        </h1>
+        <a href="{% url 'students:bulk_import_dashboard' %}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i>Back to Dashboard
+        </a>
+    </div>
+
+    <!-- Template Download Form -->
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Template Options</h6>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <!-- Template Type -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">
+                                <i class="fas fa-file-csv text-success me-2"></i>
+                                Template Type
+                            </label>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="template_type" id="basic" value="basic" checked>
+                                        <label class="form-check-label" for="basic">
+                                            <strong>Basic Template</strong>
+                                            <br>
+                                            <small class="text-muted">Required fields only</small>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="template_type" id="complete" value="complete">
+                                        <label class="form-check-label" for="complete">
+                                            <strong>Complete Template</strong>
+                                            <br>
+                                            <small class="text-muted">All available fields</small>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="template_type" id="sample" value="sample">
+                                        <label class="form-check-label" for="sample">
+                                            <strong>Sample Template</strong>
+                                            <br>
+                                            <small class="text-muted">With sample data</small>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Default Values -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label for="{{ form.grade_level.id_for_label }}" class="form-label fw-bold">
+                                    <i class="fas fa-graduation-cap text-info me-2"></i>
+                                    Default Grade Level
+                                </label>
+                                {{ form.grade_level }}
+                                {% if form.grade_level.help_text %}
+                                    <div class="form-text">{{ form.grade_level.help_text }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.section.id_for_label }}" class="form-label fw-bold">
+                                    <i class="fas fa-users text-warning me-2"></i>
+                                    Default Section
+                                </label>
+                                {{ form.section }}
+                                {% if form.section.help_text %}
+                                    <div class="form-text">{{ form.section.help_text }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="fas fa-download me-2"></i>
+                                Download Template
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Template Guide -->
+    <div class="row justify-content-center mt-4">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-info">Template Guide</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="text-primary">Required Fields:</h6>
+                            <ul class="small">
+                                <li><strong>first_name</strong> - Student's first name</li>
+                                <li><strong>last_name</strong> - Student's last name</li>
+                                <li><strong>email</strong> - Student's email address</li>
+                                <li><strong>lrn</strong> - Learner Reference Number</li>
+                                <li><strong>grade_level</strong> - Grade level (1-12)</li>
+                                <li><strong>section</strong> - Section/Class name</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <h6 class="text-primary">Optional Fields:</h6>
+                            <ul class="small">
+                                <li><strong>middle_name</strong> - Middle name</li>
+                                <li><strong>date_of_birth</strong> - Birth date</li>
+                                <li><strong>gender</strong> - Male/Female</li>
+                                <li><strong>address</strong> - Home address</li>
+                                <li><strong>phone_number</strong> - Contact number</li>
+                                <li><strong>parent_name</strong> - Parent/Guardian name</li>
+                                <li><strong>parent_phone</strong> - Parent contact</li>
+                                <li><strong>parent_email</strong> - Parent email</li>
+                                <li><strong>emergency_contact</strong> - Emergency contact</li>
+                                <li><strong>blood_type</strong> - Blood type</li>
+                                <li><strong>medical_conditions</strong> - Medical info</li>
+                                <li><strong>allergies</strong> - Known allergies</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <hr>
+                    
+                    <h6 class="text-success">Template Types:</h6>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="text-center p-3 border rounded">
+                                <i class="fas fa-file-csv fa-2x text-primary mb-2"></i>
+                                <h6>Basic Template</h6>
+                                <p class="small text-muted">Contains only required fields for quick setup</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="text-center p-3 border rounded">
+                                <i class="fas fa-file-csv fa-2x text-success mb-2"></i>
+                                <h6>Complete Template</h6>
+                                <p class="small text-muted">Contains all available fields for comprehensive data</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="text-center p-3 border rounded">
+                                <i class="fas fa-file-csv fa-2x text-info mb-2"></i>
+                                <h6>Sample Template</h6>
+                                <p class="small text-muted">Contains sample data to help you understand the format</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tips -->
+    <div class="row justify-content-center mt-4">
+        <div class="col-lg-8">
+            <div class="alert alert-info">
+                <h6 class="alert-heading">
+                    <i class="fas fa-lightbulb me-2"></i>
+                    Pro Tips
+                </h6>
+                <ul class="mb-0">
+                    <li>Use the <strong>Complete Template</strong> for comprehensive student data</li>
+                    <li>Use the <strong>Sample Template</strong> to see example data format</li>
+                    <li>Set default values to automatically fill common fields</li>
+                    <li>Make sure all required fields are filled before uploading</li>
+                    <li>LRN must be unique for each student</li>
+                    <li>Email addresses must be valid and unique</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .form-control:focus {
+        border-color: #28a745;
+        box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+    }
+    
+    .btn-success {
+        background: linear-gradient(45deg, #28a745, #20c997);
+        border: none;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-success:hover {
+        background: linear-gradient(45deg, #20c997, #17a2b8);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+    }
+</style>
+{% endblock %}

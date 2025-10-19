@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Import Documents from Excel - School Management System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="fas fa-file-excel me-2"></i>Import Documents from Excel</h2>
+            <a href="{% url 'documents:download_template' %}" class="btn btn-outline-primary">
+                <i class="fas fa-download me-2"></i>Download Template
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-upload me-2"></i>Upload Excel File</h5>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="{{ form.excel_file.id_for_label }}" class="form-label">Excel File</label>
+                        {{ form.excel_file }}
+                        <div class="form-text">{{ form.excel_file.help_text }}</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.batch_name.id_for_label }}" class="form-label">Batch Name</label>
+                        {{ form.batch_name }}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.description.id_for_label }}" class="form-label">Description (Optional)</label>
+                        {{ form.description }}
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-upload me-2"></i>Import Documents
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Import Instructions</h5>
+            </div>
+            <div class="card-body">
+                <h6>Excel File Format:</h6>
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-check text-success me-2"></i><strong>student_id</strong> - Student ID number</li>
+                    <li><i class="fas fa-check text-success me-2"></i><strong>student_name</strong> - Full name</li>
+                    <li><i class="fas fa-check text-success me-2"></i><strong>document_type</strong> - Type of document</li>
+                    <li><i class="fas fa-check text-success me-2"></i><strong>title</strong> - Document title</li>
+                    <li><i class="fas fa-check text-success me-2"></i><strong>description</strong> - Description</li>
+                    <li><i class="fas fa-check text-success me-2"></i><strong>document_number</strong> - Unique number</li>
+                    <li><i class="fas fa-check text-success me-2"></i><strong>date_issued</strong> - Issue date</li>
+                    <li><i class="fas fa-check text-success me-2"></i><strong>notes</strong> - Additional notes</li>
+                </ul>
+                
+                <hr>
+                
+                <h6>Tips:</h6>
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-lightbulb text-warning me-2"></i>Use the template for correct format</li>
+                    <li><i class="fas fa-lightbulb text-warning me-2"></i>Ensure student IDs exist in system</li>
+                    <li><i class="fas fa-lightbulb text-warning me-2"></i>Document types must match existing types</li>
+                    <li><i class="fas fa-lightbulb text-warning me-2"></i>Use YYYY-MM-DD format for dates</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="card mt-3">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-download me-2"></i>Download Template</h5>
+            </div>
+            <div class="card-body text-center">
+                <p class="text-muted">Get the Excel template with the correct format and sample data.</p>
+                <a href="{% url 'documents:download_template' %}" class="btn btn-outline-primary">
+                    <i class="fas fa-download me-2"></i>Download Template
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

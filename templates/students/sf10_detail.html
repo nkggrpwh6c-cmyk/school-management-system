@@ -1,0 +1,512 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}SF10 Document Details - {{ sf10_doc.name }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 mb-0">
+                    <i class="fas fa-file-alt text-primary me-2"></i>
+                    SF10 Document: {{ sf10_doc.name }}
+                </h1>
+                <div>
+                    <a href="{% url 'registrar:sf10_dashboard' %}" class="btn btn-outline-primary">
+                        <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+                    </a>
+                    <a href="{% url 'registrar:sf10_edit' sf10_doc.pk %}" class="btn btn-warning">
+                        <i class="fas fa-edit me-1"></i> Edit
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Document Status Card -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-left-{% if sf10_doc.status == 'active' %}success{% elif sf10_doc.status == 'transferred' %}info{% elif sf10_doc.status == 'draft' %}warning{% else %}secondary{% endif %} shadow">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-uppercase mb-1">
+                                Document Status
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                <span class="badge badge-{% if sf10_doc.status == 'active' %}success{% elif sf10_doc.status == 'transferred' %}info{% elif sf10_doc.status == 'draft' %}warning{% else %}secondary{% endif %} badge-lg">
+                                    {{ sf10_doc.get_status_display }}
+                                </span>
+                                {% if sf10_doc.is_complete %}
+                                    <span class="badge badge-success badge-lg ml-2">Complete</span>
+                                {% else %}
+                                    <span class="badge badge-warning badge-lg ml-2">Incomplete</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-file-alt fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Basic Information -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Basic Information</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <strong>Name:</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            {{ sf10_doc.name }}
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <strong>LRN:</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            {{ sf10_doc.lrn }}
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <strong>Birth Date:</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            {{ sf10_doc.birth_date|date:"F d, Y" }}
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <strong>Birth Place:</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            {{ sf10_doc.birth_place }}
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <strong>Sex:</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            {{ sf10_doc.get_sex_display }}
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <strong>Age:</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            {{ sf10_doc.age }} years old
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Academic Information -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Academic Information</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <strong>School Year:</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            {{ sf10_doc.school_year }}
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <strong>Grade Level:</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            {{ sf10_doc.grade_level }}
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <strong>Section:</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            {{ sf10_doc.section|default:"Not specified" }}
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <strong>Previous School:</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            {{ sf10_doc.previous_school|default:"Not specified" }}
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <strong>Previous Grade:</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            {{ sf10_doc.previous_grade|default:"Not specified" }}
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <strong>Date of Enrollment:</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            {{ sf10_doc.date_of_enrollment|date:"F d, Y" }}
+                        </div>
+                    </div>
+                    {% if sf10_doc.date_of_graduation %}
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <strong>Date of Graduation:</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            {{ sf10_doc.date_of_graduation|date:"F d, Y" }}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Address Information -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Address Information</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <strong>Present Address:</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            {{ sf10_doc.present_address }}
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <strong>Permanent Address:</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            {{ sf10_doc.permanent_address }}
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <strong>Contact Number:</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            {{ sf10_doc.contact_number|default:"Not provided" }}
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <strong>Email:</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            {{ sf10_doc.email|default:"Not provided" }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Parent/Guardian Information -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Parent/Guardian Information</h6>
+                </div>
+                <div class="card-body">
+                    {% if sf10_doc.father_name %}
+                    <h6 class="text-primary">Father's Information</h6>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <strong>Name:</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            {{ sf10_doc.father_name }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <strong>Occupation:</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            {{ sf10_doc.father_occupation|default:"Not specified" }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <strong>Contact:</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            {{ sf10_doc.father_contact|default:"Not provided" }}
+                        </div>
+                    </div>
+                    <hr>
+                    {% endif %}
+
+                    {% if sf10_doc.mother_name %}
+                    <h6 class="text-primary">Mother's Information</h6>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <strong>Name:</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            {{ sf10_doc.mother_name }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <strong>Occupation:</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            {{ sf10_doc.mother_occupation|default:"Not specified" }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <strong>Contact:</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            {{ sf10_doc.mother_contact|default:"Not provided" }}
+                        </div>
+                    </div>
+                    <hr>
+                    {% endif %}
+
+                    {% if sf10_doc.guardian_name %}
+                    <h6 class="text-primary">Guardian's Information</h6>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <strong>Name:</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            {{ sf10_doc.guardian_name }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <strong>Relationship:</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            {{ sf10_doc.guardian_relationship|default:"Not specified" }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <strong>Contact:</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            {{ sf10_doc.guardian_contact|default:"Not provided" }}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if not sf10_doc.father_name and not sf10_doc.mother_name and not sf10_doc.guardian_name %}
+                    <p class="text-muted">No parent/guardian information provided.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Grades and Attendance -->
+        {% if grades %}
+        <div class="col-12 mb-4">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Academic Grades</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Subject</th>
+                                    <th>1st Quarter</th>
+                                    <th>2nd Quarter</th>
+                                    <th>3rd Quarter</th>
+                                    <th>4th Quarter</th>
+                                    <th>Final Grade</th>
+                                    <th>Remarks</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for grade in grades %}
+                                <tr>
+                                    <td>{{ grade.subject }}</td>
+                                    <td>{{ grade.first_quarter|default:"-" }}</td>
+                                    <td>{{ grade.second_quarter|default:"-" }}</td>
+                                    <td>{{ grade.third_quarter|default:"-" }}</td>
+                                    <td>{{ grade.fourth_quarter|default:"-" }}</td>
+                                    <td><strong>{{ grade.final_grade|default:"-" }}</strong></td>
+                                    <td>{{ grade.remarks|default:"-" }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if attendance %}
+        <div class="col-12 mb-4">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Attendance Records</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Month</th>
+                                    <th>Days Present</th>
+                                    <th>Days Absent</th>
+                                    <th>Days Tardy</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for record in attendance %}
+                                <tr>
+                                    <td>{{ record.month }}</td>
+                                    <td>{{ record.days_present }}</td>
+                                    <td>{{ record.days_absent }}</td>
+                                    <td>{{ record.days_tardy }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Document Files -->
+        <div class="col-12 mb-4">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Document Files</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% if sf10_doc.excel_file %}
+                        <div class="col-md-6 mb-3">
+                            <div class="card border-left-success">
+                                <div class="card-body">
+                                    <h6 class="text-success">Excel File</h6>
+                                    <p class="mb-2">{{ sf10_doc.excel_file.name|slice:"15:" }}</p>
+                                    <a href="{{ sf10_doc.excel_file.url }}" class="btn btn-success btn-sm" target="_blank">
+                                        <i class="fas fa-file-excel me-1"></i> Download Excel
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% if sf10_doc.pdf_file %}
+                        <div class="col-md-6 mb-3">
+                            <div class="card border-left-danger">
+                                <div class="card-body">
+                                    <h6 class="text-danger">PDF File</h6>
+                                    <p class="mb-2">{{ sf10_doc.pdf_file.name|slice:"15:" }}</p>
+                                    <a href="{{ sf10_doc.pdf_file.url }}" class="btn btn-danger btn-sm" target="_blank">
+                                        <i class="fas fa-file-pdf me-1"></i> Download PDF
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% if not sf10_doc.excel_file and not sf10_doc.pdf_file %}
+                        <div class="col-12">
+                            <p class="text-muted">No files uploaded for this SF10 document.</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notes and Metadata -->
+        <div class="col-12 mb-4">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Additional Information</h6>
+                </div>
+                <div class="card-body">
+                    {% if sf10_doc.notes %}
+                    <div class="row mb-3">
+                        <div class="col-sm-2">
+                            <strong>Notes:</strong>
+                        </div>
+                        <div class="col-sm-10">
+                            {{ sf10_doc.notes }}
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <strong>Created by:</strong>
+                        </div>
+                        <div class="col-sm-4">
+                            {{ sf10_doc.created_by.get_full_name }}
+                        </div>
+                        <div class="col-sm-2">
+                            <strong>Created at:</strong>
+                        </div>
+                        <div class="col-sm-4">
+                            {{ sf10_doc.created_at|date:"F d, Y H:i" }}
+                        </div>
+                    </div>
+                    
+                    {% if sf10_doc.updated_at != sf10_doc.created_at %}
+                    <div class="row mt-2">
+                        <div class="col-sm-2">
+                            <strong>Last updated:</strong>
+                        </div>
+                        <div class="col-sm-4">
+                            {{ sf10_doc.updated_at|date:"F d, Y H:i" }}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
