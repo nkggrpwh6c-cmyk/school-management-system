@@ -79,10 +79,20 @@
                                     <i class="fas fa-credit-card me-1"></i>Fees
                                 </a>
                             </li>
-                        {% elif user.is_admin %}
+                        {% elif user.is_admin or user.is_staff %}
                             <li class="nav-item">
-                                <a class="nav-link" href="/admin/">
-                                    <i class="fas fa-cogs me-1"></i>Admin Panel
+                                <a class="nav-link" href="/registrar/">
+                                    <i class="fas fa-user-graduate me-1"></i>Registrar Dashboard
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/registrar/search/">
+                                    <i class="fas fa-search me-1"></i>Search Students
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/registrar/sf10/">
+                                    <i class="fas fa-file-alt me-1"></i>SF10 Records
                                 </a>
                             </li>
                         {% endif %}
