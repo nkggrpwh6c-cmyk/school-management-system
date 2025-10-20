@@ -54,27 +54,24 @@ def enhanced_registrar_dashboard(request):
     active_students = int(stats['active']) if stats['active'] is not None else 0
     inactive_students = int(stats['inactive']) if stats['inactive'] is not None else 0
     
+    # Get current year for enrollment stats
+    current_year = timezone.now().year
+    enrolled_this_year = Student.objects.filter(
+        admission_date__year=current_year
+    ).count()
+    
+    # Get document count
+    total_documents = SF10Document.objects.count()
+    
     # Only load data if there are students (avoid empty queries)
     if total_students > 0:
-        # Optimize grade distribution (limit to top 5 for speed)
+        # Optimize grade distribution (limit to top 6 for speed)
         grade_distribution = Student.objects.values('grade__name').annotate(
             count=Count('id')
-        ).order_by('-count')[:5]
-        
-        # Optimize section distribution (limit to top 5 for speed)
-        section_distribution = Student.objects.values('section__name').annotate(
-            count=Count('id')
-        ).order_by('-count')[:5]
-        
-        # Optimize recent students (limit to 3 for speed)
-        recent_students = Student.objects.select_related(
-            'user', 'grade', 'section'
-        ).order_by('-created_at')[:3]
+        ).order_by('-count')[:6]
     else:
         # Empty data for fresh system
         grade_distribution = []
-        section_distribution = []
-        recent_students = []
     
     # Minimal context for maximum speed
     context = {
@@ -83,9 +80,9 @@ def enhanced_registrar_dashboard(request):
         'inactive_students': inactive_students,
         'graduated_students': inactive_students,  # All inactive = graduated
         'transferred_students': 0,  # No transfers in current model
+        'enrolled_this_year': enrolled_this_year,
+        'total_documents': total_documents,
         'grade_distribution': grade_distribution,
-        'section_distribution': section_distribution,
-        'recent_students': recent_students,
     }
     
     # Cache for 5 minutes for smooth performance

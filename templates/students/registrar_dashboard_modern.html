@@ -1,223 +1,223 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Modern Registrar Dashboard{% endblock %}
+{% block title %}Registrar Dashboard{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/registrar-modern.css' %}">
 <style>
-    /* Beautiful Modern Design with Performance Optimizations */
+    /* Modern Professional Design with Optimized Performance */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
     body {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         min-height: 100vh;
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-        margin: 0;
-        padding: 0;
+        font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
         overflow-x: hidden;
     }
     
-    .main-container {
-        background: rgba(255, 255, 255, 0.08);
-        backdrop-filter: blur(20px);
-        border-radius: 30px;
-        margin: 20px;
-        padding: 40px;
-        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        position: relative;
-        overflow: hidden;
+    .dashboard-wrapper {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 30px 20px;
     }
     
-    .main-container::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
-        border-radius: 30px;
-        pointer-events: none;
-    }
-    
+    /* Header Section */
     .dashboard-header {
         text-align: center;
-        margin-bottom: 3rem;
-        position: relative;
-        z-index: 2;
-        animation: fadeInUp 0.8s ease-out;
+        margin-bottom: 40px;
+        animation: fadeIn 0.5s ease-out;
     }
     
     .dashboard-title {
-        font-size: 3.2rem;
-        font-weight: 800;
-        background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        margin-bottom: 1rem;
-        animation: glow 2s ease-in-out infinite alternate;
-        text-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: white;
+        margin-bottom: 0.5rem;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.2);
     }
     
     .dashboard-subtitle {
         color: rgba(255, 255, 255, 0.9);
-        font-size: 1.3rem;
+        font-size: 1.1rem;
         font-weight: 300;
-        animation: fadeInUp 0.8s ease-out 0.2s both;
     }
     
-    /* Beautiful Statistics Grid */
-    .dashboard-grid {
+    /* Quick Actions Bar */
+    .quick-actions {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-bottom: 30px;
+        animation: fadeIn 0.6s ease-out 0.1s both;
+    }
+    
+    .quick-action-btn {
+        background: rgba(255, 255, 255, 0.95);
+        border: none;
+        border-radius: 12px;
+        padding: 12px 24px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: #667eea;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .quick-action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        background: white;
+    }
+    
+    .quick-action-btn i {
+        font-size: 1.1rem;
+    }
+    
+    /* Statistics Grid */
+    .stats-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 25px;
-        margin-bottom: 3rem;
-        position: relative;
-        z-index: 2;
-    }
-    
-    .dashboard-item {
-        background: rgba(255, 255, 255, 0.12);
-        backdrop-filter: blur(15px);
-        border-radius: 20px;
-        padding: 30px;
-        text-align: center;
-        border: 1px solid rgba(255, 255, 255, 0.25);
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .dashboard-item::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
-        border-radius: 20px;
-        pointer-events: none;
-    }
-    
-    .dashboard-item:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-        border-color: rgba(255, 255, 255, 0.4);
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
     }
     
     .stat-card {
-        color: white;
-        position: relative;
-        z-index: 2;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 16px;
+        padding: 25px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        animation: fadeInUp 0.5s ease-out both;
+    }
+    
+    .stat-card:nth-child(1) { animation-delay: 0.1s; }
+    .stat-card:nth-child(2) { animation-delay: 0.15s; }
+    .stat-card:nth-child(3) { animation-delay: 0.2s; }
+    .stat-card:nth-child(4) { animation-delay: 0.25s; }
+    .stat-card:nth-child(5) { animation-delay: 0.3s; }
+    .stat-card:nth-child(6) { animation-delay: 0.35s; }
+    
+    .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
     }
     
     .stat-icon {
-        font-size: 2.5rem;
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
         margin-bottom: 15px;
-        opacity: 0.9;
-        animation: float 3s ease-in-out infinite;
     }
     
-    .stat-number {
-        font-size: 3rem;
-        font-weight: 800;
-        margin-bottom: 8px;
-        background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    .stat-icon.blue { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+    .stat-icon.green { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; }
+    .stat-icon.orange { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; }
+    .stat-icon.purple { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; }
+    .stat-icon.red { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); color: white; }
+    .stat-icon.teal { background: linear-gradient(135deg, #30cfd0 0%, #330867 100%); color: white; }
+    
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #2d3748;
+        margin-bottom: 5px;
     }
     
     .stat-label {
-        font-size: 1rem;
-        opacity: 0.9;
+        font-size: 0.9rem;
+        color: #718096;
         font-weight: 500;
-        letter-spacing: 0.5px;
     }
     
-    /* Beautiful Quick Actions */
-    .glass-card {
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(15px);
-        border-radius: 20px;
+    /* Content Cards */
+    .content-section {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 16px;
         padding: 30px;
-        margin-bottom: 2rem;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        position: relative;
-        z-index: 2;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        animation: fadeInUp 0.6s ease-out 0.4s both;
     }
     
-    .card-header h3 {
-        color: white;
+    .section-title {
         font-size: 1.5rem;
         font-weight: 700;
-        margin-bottom: 0;
+        color: #2d3748;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 3px solid #667eea;
     }
     
-    .action-cards {
+    .feature-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
         gap: 20px;
-        margin-top: 1.5rem;
     }
     
-    .action-card {
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        border-radius: 15px;
+    .feature-item {
+        background: #f7fafc;
+        border-radius: 12px;
         padding: 20px;
-        text-align: center;
+        border-left: 4px solid #667eea;
+        transition: all 0.2s ease;
+    }
+    
+    .feature-item:hover {
+        background: #edf2f7;
+        transform: translateX(5px);
+    }
+    
+    .feature-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #2d3748;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .feature-desc {
+        color: #718096;
+        font-size: 0.9rem;
+    }
+    
+    .feature-icon {
+        width: 35px;
+        height: 35px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
-        text-decoration: none;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .action-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
-        border-radius: 15px;
-        pointer-events: none;
-    }
-    
-    .action-card:hover {
-        background: rgba(255, 255, 255, 0.2);
-        transform: translateY(-3px);
-        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-        color: white;
-        text-decoration: none;
-        border-color: rgba(255, 255, 255, 0.4);
-    }
-    
-    .action-card i {
-        font-size: 1.8rem;
-        margin-bottom: 10px;
-        display: block;
-        position: relative;
-        z-index: 2;
-    }
-    
-    .action-card span {
-        position: relative;
-        z-index: 2;
-        font-weight: 500;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
     }
     
     /* Animations */
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
     @keyframes fadeInUp {
         from {
             opacity: 0;
-            transform: translateY(30px);
+            transform: translateY(20px);
         }
         to {
             opacity: 1;
@@ -225,620 +225,178 @@
         }
     }
     
-    @keyframes glow {
-        from {
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
-        }
-        to {
-            text-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
-        }
-    }
-    
-    @keyframes float {
-        0%, 100% {
-            transform: translateY(0px);
-        }
-        50% {
-            transform: translateY(-10px);
-        }
-    }
-    
-    /* Beautiful Action Buttons */
-    .action-btn {
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        border-radius: 15px;
-        padding: 20px 15px;
-        text-align: center;
-        color: white;
-        text-decoration: none;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
-        display: block;
-    }
-    
-    .action-btn::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
-        border-radius: 15px;
-        pointer-events: none;
-    }
-    
-    .action-btn:hover {
-        background: rgba(255, 255, 255, 0.2);
-        transform: translateY(-3px);
-        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-        color: white;
-        text-decoration: none;
-        border-color: rgba(255, 255, 255, 0.4);
-    }
-    
-    .action-btn i {
-        font-size: 1.5rem;
-        margin-bottom: 8px;
-        display: block;
-        position: relative;
-        z-index: 2;
-    }
-    
-    .action-btn span {
-        position: relative;
-        z-index: 2;
-        font-weight: 500;
-    }
-    
-    /* Beautiful Tables */
-    .table-dark {
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 15px;
-        overflow: hidden;
-    }
-    
-    .table-dark thead th {
-        background: rgba(255, 255, 255, 0.1);
-        border: none;
-        color: white;
-        font-weight: 600;
-        padding: 15px;
-    }
-    
-    .table-dark tbody td {
-        border: none;
-        color: rgba(255, 255, 255, 0.9);
-        padding: 15px;
-    }
-    
-    .table-dark tbody tr:hover {
-        background: rgba(255, 255, 255, 0.1);
-    }
-    
-    /* Progress Bars */
-    .progress {
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 10px;
-        overflow: hidden;
-    }
-    
-    .progress-bar {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        border-radius: 10px;
-    }
-    
-    /* Student Cards */
-    .student-card {
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        border-radius: 15px;
-        padding: 20px;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        transition: all 0.3s ease;
-    }
-    
-    .student-card:hover {
-        background: rgba(255, 255, 255, 0.15);
-        transform: translateY(-2px);
-    }
-    
-    .student-avatar {
-        width: 50px;
-        height: 50px;
-        background: rgba(255, 255, 255, 0.2);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 15px;
-    }
-    
-    .student-avatar i {
-        font-size: 1.5rem;
-        color: white;
-    }
-    
-    /* Status Items */
-    .status-item {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 15px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 10px;
-        margin-bottom: 10px;
-    }
-    
-    .status-item i {
-        font-size: 1.2rem;
-    }
-    
-    /* Responsive Design */
+    /* Responsive */
     @media (max-width: 768px) {
-        .main-container {
-            margin: 10px;
-            padding: 20px;
-        }
-        
         .dashboard-title {
-            font-size: 2.5rem;
+            font-size: 2rem;
         }
         
-        .dashboard-grid {
+        .stats-grid {
             grid-template-columns: 1fr;
         }
         
-        .action-cards {
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        .quick-actions {
+            flex-direction: column;
         }
+        
+        .quick-action-btn {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+    
+    /* Loading Optimization */
+    .stat-card, .content-section {
+        will-change: transform;
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="main-container">
-    <!-- Dashboard Header -->
+<div class="dashboard-wrapper">
+    <!-- Header -->
     <div class="dashboard-header">
-        <h1 class="dashboard-title">
-            <i class="fas fa-user-graduate me-3"></i>
-            Registrar Command Center
-        </h1>
-        <p class="dashboard-subtitle">Comprehensive Student Records Management System</p>
+        <h1 class="dashboard-title">Registrar Dashboard</h1>
+        <p class="dashboard-subtitle">Welcome, {{ user.get_full_name }}! Manage your student records efficiently.</p>
     </div>
-
-    <!-- Statistics Cards -->
-    <div class="dashboard-grid mb-5">
-        <div class="dashboard-item">
-            <div class="stat-card">
-                <div class="stat-icon">
-                    <i class="fas fa-users"></i>
-                </div>
-                <div class="stat-number">{{ total_students }}</div>
-                <div class="stat-label">Total Students</div>
-            </div>
-        </div>
-        
-        <div class="dashboard-item">
-            <div class="stat-card">
-                <div class="stat-icon">
-                    <i class="fas fa-user-check"></i>
-                </div>
-                <div class="stat-number">{{ active_students }}</div>
-                <div class="stat-label">Active Students</div>
-            </div>
-        </div>
-        
-        <div class="dashboard-item">
-            <div class="stat-card">
-                <div class="stat-icon">
-                    <i class="fas fa-graduation-cap"></i>
-                </div>
-                <div class="stat-number">{{ graduated_students }}</div>
-                <div class="stat-label">Graduated</div>
-            </div>
-        </div>
-        
-        <div class="dashboard-item">
-            <div class="stat-card">
-                <div class="stat-icon">
-                    <i class="fas fa-exchange-alt"></i>
-                </div>
-                <div class="stat-number">{{ transferred_students }}</div>
-                <div class="stat-label">Transferred</div>
-            </div>
-        </div>
-    </div>
-
+    
     <!-- Quick Actions -->
-    <div class="glass-card mb-5">
-        <div class="card-header py-4">
-            <h3 class="text-white mb-0">
-                <i class="fas fa-bolt me-2"></i>
-                Quick Actions
-            </h3>
-        </div>
-        <div class="card-body">
-            <div class="row g-4">
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <a href="{% url 'registrar:student_search' %}" class="action-btn success w-100 text-center d-block">
-                        <i class="fas fa-search mb-2 d-block"></i>
-                        Search Students
-                    </a>
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <a href="{% url 'registrar:bulk_import_registrar' %}" class="action-btn info w-100 text-center d-block">
-                        <i class="fas fa-upload mb-2 d-block"></i>
-                        Bulk Import
-                    </a>
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <a href="{% url 'registrar:export_students' %}" class="action-btn warning w-100 text-center d-block">
-                        <i class="fas fa-download mb-2 d-block"></i>
-                        Export Data
-                    </a>
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <a href="{% url 'registrar:student_analytics' %}" class="action-btn w-100 text-center d-block">
-                        <i class="fas fa-chart-bar mb-2 d-block"></i>
-                        Analytics
-                    </a>
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <a href="{% url 'registrar:sf10_dashboard' %}" class="action-btn success w-100 text-center d-block">
-                        <i class="fas fa-file-alt mb-2 d-block"></i>
-                        SF10 Documents
-                    </a>
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <a href="{% url 'registrar:sf10_upload' %}" class="action-btn info w-100 text-center d-block">
-                        <i class="fas fa-file-upload mb-2 d-block"></i>
-                        SF10 Upload
-                    </a>
-                </div>
-            </div>
-        </div>
+    <div class="quick-actions">
+        <a href="{% url 'registrar:student_search' %}" class="quick-action-btn">
+            <i>🔍</i> Search Students
+        </a>
+        <a href="{% url 'registrar:bulk_import' %}" class="quick-action-btn">
+            <i>📤</i> Bulk Import
+        </a>
+        <a href="{% url 'registrar:student_analytics' %}" class="quick-action-btn">
+            <i>📊</i> Analytics
+        </a>
+        <a href="{% url 'registrar:sf10_dashboard' %}" class="quick-action-btn">
+            <i>📋</i> SF10 Records
+        </a>
     </div>
-
-    <!-- Main Content Grid -->
-    <div class="row">
-        <!-- Grade Distribution -->
-        <div class="col-lg-6 mb-4">
-            <div class="modern-card">
-                <div class="card-header py-4">
-                    <h4 class="text-white mb-0">
-                        <i class="fas fa-layer-group me-2"></i>
-                        Students by Grade Level
-                    </h4>
-                </div>
-                <div class="card-body">
-                    <div class="modern-table">
-                        <table class="table table-borderless text-white">
-                            <thead>
-                                <tr>
-                                    <th>Grade Level</th>
-                                    <th>Count</th>
-                                    <th>Progress</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for grade in grade_distribution %}
-                                <tr>
-                                    <td>
-                                        <i class="fas fa-graduation-cap me-2"></i>
-                                        {{ grade.grade__name|default:"Unknown" }}
-                                    </td>
-                                    <td>
-                                        <span class="badge bg-light text-dark">{{ grade.count }}</span>
-                                    </td>
-                                    <td>
-                                        <div class="progress-modern">
-                                            <div class="progress-bar" style="width: {% widthratio grade.count total_students 100 %}%"></div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Section Distribution -->
-        <div class="col-lg-6 mb-4">
-            <div class="modern-card">
-                <div class="card-header py-4">
-                    <h4 class="text-white mb-0">
-                        <i class="fas fa-users-cog me-2"></i>
-                        Students by Section
-                    </h4>
-                </div>
-                <div class="card-body">
-                    <div class="modern-table">
-                        <table class="table table-borderless text-white">
-                            <thead>
-                                <tr>
-                                    <th>Section</th>
-                                    <th>Count</th>
-                                    <th>Progress</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for section in section_distribution %}
-                                <tr>
-                                    <td>
-                                        <i class="fas fa-users me-2"></i>
-                                        {{ section.section__name|default:"Unknown" }}
-                                    </td>
-                                    <td>
-                                        <span class="badge bg-light text-dark">{{ section.count }}</span>
-                                    </td>
-                                    <td>
-                                        <div class="progress-modern">
-                                            <div class="progress-bar" style="width: {% widthratio section.count total_students 100 %}%"></div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Recent Activity -->
-    <div class="row">
-        <div class="col-12">
-            <div class="glass-card">
-                <div class="card-header py-4">
-                    <h4 class="text-white mb-0">
-                        <i class="fas fa-clock me-2"></i>
-                        Recent Activity
-                    </h4>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h6 class="text-white mb-3">Recent Students</h6>
-                            <div class="list-group list-group-flush">
-                                {% for student in recent_students|slice:":5" %}
-                                <div class="list-group-item bg-transparent border-0 text-white">
-                                    <div class="d-flex align-items-center">
-                                        <div class="avatar-sm bg-light rounded-circle d-flex align-items-center justify-content-center me-3">
-                                            <i class="fas fa-user text-primary"></i>
-                                        </div>
-                                        <div>
-                                            <div class="fw-bold">{{ student.user.get_full_name }}</div>
-                                            <small class="text-muted">{{ student.grade.name|default:"No Grade" }} - {{ student.section.name|default:"No Section" }}</small>
-                                        </div>
-                                    </div>
-                                </div>
-                                {% endfor %}
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <h6 class="text-white mb-3">System Status</h6>
-                            <div class="row g-3">
-                                <div class="col-6">
-                                    <div class="text-center p-3 bg-light bg-opacity-10 rounded">
-                                        <i class="fas fa-database text-success mb-2"></i>
-                                        <div class="text-white fw-bold">{{ total_students }}</div>
-                                        <small class="text-muted">Total Records</small>
-                                    </div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="text-center p-3 bg-light bg-opacity-10 rounded">
-                                        <i class="fas fa-check-circle text-success mb-2"></i>
-                                        <div class="text-white fw-bold">{{ active_students }}</div>
-                                        <small class="text-muted">Active</small>
-                                    </div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="text-center p-3 bg-light bg-opacity-10 rounded">
-                                        <i class="fas fa-archive text-warning mb-2"></i>
-                                        <div class="text-white fw-bold">{{ graduated_students }}</div>
-                                        <small class="text-muted">Archived</small>
-                                    </div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="text-center p-3 bg-light bg-opacity-10 rounded">
-                                        <i class="fas fa-shield-alt text-info mb-2"></i>
-                                        <div class="text-white fw-bold">100%</div>
-                                        <small class="text-muted">Secure</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Floating Action Button -->
-<button class="fab" onclick="showQuickActions()" title="Quick Actions">
-    <i class="fas fa-plus"></i>
-</button>
-
-<!-- Quick Actions Modal -->
-<div class="modal fade" id="quickActionsModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content modern-card">
-            <div class="modal-header">
-                <h5 class="modal-title text-white">
-                    <i class="fas fa-bolt me-2"></i>
-                    Quick Actions
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <div class="row g-3">
-                    <div class="col-md-4">
-                        <a href="{% url 'registrar:student_search' %}" class="btn action-btn success w-100">
-                            <i class="fas fa-search mb-2 d-block"></i>
-                            Search Students
-                        </a>
-                    </div>
-                    <div class="col-md-4">
-                        <a href="{% url 'registrar:bulk_import_registrar' %}" class="btn action-btn info w-100">
-                            <i class="fas fa-upload mb-2 d-block"></i>
-                            Bulk Import
-                        </a>
-                    </div>
-                    <div class="col-md-4">
-                        <a href="{% url 'registrar:sf10_dashboard' %}" class="btn action-btn warning w-100">
-                            <i class="fas fa-file-alt mb-2 d-block"></i>
-                            SF10 Documents
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-{% endblock %}
-
-{% block extra_js %}
-<script>
-// Smooth scrolling and animations
-document.addEventListener('DOMContentLoaded', function() {
-    // Animate elements on scroll
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
     
-    const observer = new IntersectionObserver(function(entries) {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-            }
-        });
-    }, observerOptions);
+    <!-- Statistics Grid -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon blue">
+                <i>👥</i>
+            </div>
+            <div class="stat-value">{{ total_students }}</div>
+            <div class="stat-label">Total Students</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon green">
+                <i>✓</i>
+            </div>
+            <div class="stat-value">{{ active_students }}</div>
+            <div class="stat-label">Active Students</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon orange">
+                <i>📚</i>
+            </div>
+            <div class="stat-value">{{ enrolled_this_year }}</div>
+            <div class="stat-label">Enrolled This Year</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon purple">
+                <i>🎓</i>
+            </div>
+            <div class="stat-value">{{ graduated_students }}</div>
+            <div class="stat-label">Graduated</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon red">
+                <i>🔄</i>
+            </div>
+            <div class="stat-value">{{ transferred_students }}</div>
+            <div class="stat-label">Transferred</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon teal">
+                <i>📁</i>
+            </div>
+            <div class="stat-value">{{ total_documents }}</div>
+            <div class="stat-label">Total Documents</div>
+        </div>
+    </div>
     
-    // Observe all animated elements
-    document.querySelectorAll('.dashboard-item, .modern-card, .glass-card').forEach(el => {
-        observer.observe(el);
-    });
-    
-    // Add loading states to buttons
-    document.querySelectorAll('.action-btn, .modern-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const originalText = this.innerHTML;
-            this.innerHTML = '<span class="loading-spinner me-2"></span>Loading...';
-            this.disabled = true;
+    <!-- Features Section -->
+    <div class="content-section">
+        <h2 class="section-title">Key Features</h2>
+        <div class="feature-grid">
+            <div class="feature-item">
+                <div class="feature-title">
+                    <div class="feature-icon">🔍</div>
+                    Smart Search
+                </div>
+                <p class="feature-desc">Advanced search with filters for quick student lookup</p>
+            </div>
             
-            // Re-enable after 2 seconds (adjust as needed)
-            setTimeout(() => {
-                this.innerHTML = originalText;
-                this.disabled = false;
-            }, 2000);
-        });
-    });
-    
-    // Add hover effects to cards
-    document.querySelectorAll('.modern-card, .glass-card').forEach(card => {
-        card.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-5px) scale(1.02)';
-        });
-        
-        card.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateY(0) scale(1)';
-        });
-    });
-});
-
-// Quick Actions Modal
-function showQuickActions() {
-    const modal = new bootstrap.Modal(document.getElementById('quickActionsModal'));
-    modal.show();
-}
-
-// Notification System
-function showNotification(message, type = 'info') {
-    const notification = document.createElement('div');
-    notification.className = `notification ${type}`;
-    notification.innerHTML = `
-        <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'} me-2"></i>
-        ${message}
-    `;
-    
-    document.body.appendChild(notification);
-    
-    // Auto remove after 5 seconds
-    setTimeout(() => {
-        notification.style.animation = 'slideInRight 0.5s ease-out reverse';
-        setTimeout(() => notification.remove(), 500);
-    }, 5000);
-}
-
-// Real-time updates (simulated)
-function updateStatistics() {
-    // This would typically fetch real data from the server
-    const statNumbers = document.querySelectorAll('.stat-number');
-    statNumbers.forEach(stat => {
-        const currentValue = parseInt(stat.textContent);
-        const newValue = currentValue + Math.floor(Math.random() * 3);
-        stat.textContent = newValue;
-        
-        // Add pulse animation
-        stat.style.animation = 'pulse 0.6s ease-out';
-        setTimeout(() => {
-            stat.style.animation = '';
-        }, 600);
-    });
-}
-
-// Update statistics every 30 seconds
-setInterval(updateStatistics, 30000);
-
-// Add keyboard shortcuts
-document.addEventListener('keydown', function(e) {
-    // Ctrl/Cmd + K for search
-    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-        e.preventDefault();
-        window.location.href = "{% url 'registrar:student_search' %}";
-    }
-    
-    // Ctrl/Cmd + I for import
-    if ((e.ctrlKey || e.metaKey) && e.key === 'i') {
-        e.preventDefault();
-        window.location.href = "{% url 'registrar:bulk_import_registrar' %}";
-    }
-    
-    // Ctrl/Cmd + E for export
-    if ((e.ctrlKey || e.metaKey) && e.key === 'e') {
-        e.preventDefault();
-        window.location.href = "{% url 'registrar:export_students' %}";
-    }
-});
-
-// Add search functionality
-const searchInput = document.createElement('div');
-searchInput.innerHTML = `
-    <div class="search-container position-fixed" style="top: 20px; left: 20px; z-index: 1000;">
-        <input type="text" class="search-input" placeholder="Search students... (Ctrl+K)" style="width: 300px;">
+            <div class="feature-item">
+                <div class="feature-title">
+                    <div class="feature-icon">✅</div>
+                    Data Validation
+                </div>
+                <p class="feature-desc">Automatic checks for duplicates and missing information</p>
+            </div>
+            
+            <div class="feature-item">
+                <div class="feature-title">
+                    <div class="feature-icon">📦</div>
+                    Archive System
+                </div>
+                <p class="feature-desc">Organized storage for alumni and transferred students</p>
+            </div>
+            
+            <div class="feature-item">
+                <div class="feature-title">
+                    <div class="feature-icon">💾</div>
+                    Auto Backup
+                </div>
+                <p class="feature-desc">Daily encrypted backups to protect your data</p>
+            </div>
+            
+            <div class="feature-item">
+                <div class="feature-title">
+                    <div class="feature-icon">📊</div>
+                    Analytics
+                </div>
+                <p class="feature-desc">Comprehensive reports and enrollment statistics</p>
+            </div>
+            
+            <div class="feature-item">
+                <div class="feature-title">
+                    <div class="feature-icon">📋</div>
+                    SF10 Management
+                </div>
+                <p class="feature-desc">Complete SF10 forms and records management</p>
+            </div>
+        </div>
     </div>
-`;
-document.body.appendChild(searchInput);
-
-// Search functionality
-const searchField = document.querySelector('.search-input');
-searchField.addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-        const query = this.value.trim();
-        if (query) {
-            window.location.href = `{% url 'registrar:student_search' %}?search=${encodeURIComponent(query)}`;
-        }
-    }
-});
-</script>
+    
+    <!-- Grade Distribution -->
+    {% if grade_distribution %}
+    <div class="content-section">
+        <h2 class="section-title">Grade Distribution</h2>
+        <div class="feature-grid">
+            {% for grade in grade_distribution %}
+            <div class="feature-item">
+                <div class="feature-title">
+                    <div class="feature-icon">{{ forloop.counter }}</div>
+                    {{ grade.grade__name }}
+                </div>
+                <p class="feature-desc">{{ grade.count }} student{{ grade.count|pluralize }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
 {% endblock %}

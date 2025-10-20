@@ -17,8 +17,8 @@ def home_redirect(request):
             return redirect('teachers:dashboard')
         elif request.user.is_parent():
             return redirect('parents:dashboard')
-        elif request.user.is_admin():
-            return redirect('/admin/')
+        elif request.user.is_admin() or request.user.is_staff:
+            return redirect('/registrar/')
     return redirect('accounts:login')
 
 def health_check(request):
