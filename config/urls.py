@@ -6,6 +6,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.shortcuts import redirect
+from django.http import JsonResponse
 
 def home_redirect(request):
     """Redirect to appropriate dashboard based on user role"""
@@ -20,9 +21,17 @@ def home_redirect(request):
             return redirect('/admin/')
     return redirect('accounts:login')
 
+def health_check(request):
+    """Health check endpoint for Render deployment"""
+    return JsonResponse({
+        'status': 'healthy',
+        'message': 'Application is running'
+    }, status=200)
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home_redirect, name='home'),
+    path('healthz/', health_check, name='health_check'),
     path('accounts/', include('apps.accounts.urls')),
     path('students/', include('apps.students.urls')),
     path('registrar/', include('apps.students.registrar_urls')),

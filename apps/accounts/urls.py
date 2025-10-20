@@ -1,6 +1,6 @@
 from django.urls import path
 from django.contrib.auth import views as auth_views
-from . import views, security_views, security_admin_views
+from . import views, security_views, security_admin_views, health_views
 
 app_name = 'accounts'
 
@@ -28,4 +28,7 @@ urlpatterns = [
     path('security-admin/events/', security_admin_views.security_events_admin, name='security_events_admin'),
     path('security-admin/users/', security_admin_views.security_user_management, name='security_user_management'),
     path('security-admin/analytics/', security_admin_views.security_analytics_admin, name='security_analytics_admin'),
+    
+    # Health check endpoint
+    path('healthz/', health_views.health_check, name='health_check'),
 ]
