@@ -1,4 +1,5 @@
 from django.db import migrations
+from django.contrib.auth.hashers import make_password
 
 
 def create_default_users(apps, schema_editor):
@@ -8,26 +9,30 @@ def create_default_users(apps, schema_editor):
     admin_username = 'admin'
     admin_password = 'admin123'
     if not User.objects.filter(username=admin_username).exists():
-        admin = User.objects.create(username=admin_username, is_staff=True, is_superuser=True)
-        admin.set_password(admin_password)
-        admin.save()
+        User.objects.create(
+            username=admin_username,
+            password=make_password(admin_password),
+            is_staff=True,
+            is_superuser=True
+        )
 
     # Registrar account
     registrar_username = 'crenz'
     registrar_password = 'crenz123'
-    registrar_defaults = {
-        'email': '',
-        'is_staff': True,
-        'is_superuser': False,
-    }
-    registrar, _ = User.objects.get_or_create(username=registrar_username, defaults=registrar_defaults)
-    registrar.set_password(registrar_password)
-    # If the custom User model has a role field, set ADMIN
-    try:
-        setattr(registrar, 'role', 'ADMIN')
-    except Exception:
-        pass
-    registrar.save()
+    if not User.objects.filter(username=registrar_username).exists():
+        registrar_defaults = {
+            'email': '',
+            'password': make_password(registrar_password),
+            'is_staff': True,
+            'is_superuser': False,
+        }
+        registrar = User.objects.create(username=registrar_username, **registrar_defaults)
+        # If the custom User model has a role field, set ADMIN
+        try:
+            registrar.role = 'ADMIN'
+            registrar.save(update_fields=['role'])
+        except Exception:
+            pass
 
 
 def noop(apps, schema_editor):
