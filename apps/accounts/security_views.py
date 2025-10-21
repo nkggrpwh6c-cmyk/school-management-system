@@ -65,24 +65,42 @@ def security_dashboard(request):
         .order_by('-count')
     )
     
+    # Get additional data for comprehensive dashboard
+    recent_failed_logins = failed_attempts.order_by('-timestamp')[:10]
+    recent_security_events = security_events.order_by('-timestamp')[:10]
+    user_activity = SecurityEvent.objects.filter(
+        timestamp__gte=last_24h,
+        event_type__in=['ADMIN_ACTION', 'USER_ACTION']
+    ).order_by('-timestamp')[:10]
+    system_changes = SecurityEvent.objects.filter(
+        timestamp__gte=last_7d,
+        event_type='ADMIN_ACTION'
+    ).order_by('-timestamp')[:15]
+    
+    # Active users (logged in within last hour)
+    active_users = User.objects.filter(
+        last_login__gte=now - timedelta(hours=1)
+    ).count()
+    
+    # Locked accounts (estimate based on recent failed attempts)
+    locked_accounts = failed_attempts.values('username').annotate(
+        count=Count('username')
+    ).filter(count__gte=5).count()
+    
     context = {
-        'recent_attempts': recent_attempts[:20],
-        'failed_attempts_count': failed_attempts.count(),
-        'successful_attempts_count': successful_attempts.count(),
+        'failed_login_count': failed_attempts.count(),
+        'successful_login_count': successful_attempts.count(),
         'security_events_count': security_events.count(),
-        'suspicious_events_count': suspicious_events.count(),
-        'top_failed_ips': top_failed_ips,
-        'top_failed_users': top_failed_users,
-        'two_fa_percentage': round(two_fa_percentage, 1),
-        'users_with_2fa': users_with_2fa,
-        'total_users': total_users,
-        'events_by_type': events_by_type,
-        'last_24h': last_24h,
-        'last_7d': last_7d,
-        'last_30d': last_30d,
+        'active_users': active_users,
+        'locked_accounts': locked_accounts,
+        'two_fa_enabled': users_with_2fa,
+        'recent_failed_logins': recent_failed_logins,
+        'recent_security_events': recent_security_events,
+        'user_activity': user_activity,
+        'system_changes': system_changes,
     }
     
-    return render(request, 'accounts/security_dashboard.html', context)
+    return render(request, 'accounts/security_dashboard_modern.html', context)
 
 
 @login_required

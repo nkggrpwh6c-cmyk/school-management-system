@@ -1,6 +1,6 @@
 from django.urls import path
 from django.contrib.auth import views as auth_views
-from . import views, security_views, security_admin_views, health_views
+from . import views, security_views, security_admin_views, health_views, admin_views
 
 app_name = 'accounts'
 
@@ -31,4 +31,7 @@ urlpatterns = [
     
     # Health check endpoint
     path('healthz/', health_views.health_check, name='health_check'),
+    
+    # Admin Dashboard
+    path('admin-dashboard/', admin_views.admin_dashboard, name='admin_dashboard'),
 ]

@@ -5,32 +5,60 @@ from django.contrib.auth.hashers import make_password
 def create_default_users(apps, schema_editor):
     User = apps.get_model('accounts', 'User')
 
-    # Admin
+    # Admin account
     admin_username = 'admin'
     admin_password = 'admin123'
     if not User.objects.filter(username=admin_username).exists():
-        User.objects.create(
+        admin = User.objects.create(
             username=admin_username,
+            email='admin@vbca.edu',
             password=make_password(admin_password),
+            first_name='System',
+            last_name='Administrator',
             is_staff=True,
             is_superuser=True
         )
+        try:
+            admin.role = 'ADMIN'
+            admin.save(update_fields=['role'])
+        except Exception:
+            pass
 
     # Registrar account
     registrar_username = 'crenz'
     registrar_password = 'crenz123'
     if not User.objects.filter(username=registrar_username).exists():
-        registrar_defaults = {
-            'email': '',
-            'password': make_password(registrar_password),
-            'is_staff': True,
-            'is_superuser': False,
-        }
-        registrar = User.objects.create(username=registrar_username, **registrar_defaults)
-        # If the custom User model has a role field, set ADMIN
+        registrar = User.objects.create(
+            username=registrar_username,
+            email='crenz@vbca.edu',
+            password=make_password(registrar_password),
+            first_name='Registrar',
+            last_name='Administrator',
+            is_staff=True,
+            is_superuser=False
+        )
         try:
             registrar.role = 'ADMIN'
             registrar.save(update_fields=['role'])
+        except Exception:
+            pass
+    
+    # Security Admin account
+    security_username = 'security_admin'
+    security_password = 'security123'
+    if not User.objects.filter(username=security_username).exists():
+        security_admin = User.objects.create(
+            username=security_username,
+            email='security@vbca.edu',
+            password=make_password(security_password),
+            first_name='Security',
+            last_name='Administrator',
+            is_staff=True,
+            is_superuser=True
+        )
+        try:
+            security_admin.role = 'ADMIN'
+            security_admin.save(update_fields=['role'])
         except Exception:
             pass
 

@@ -33,8 +33,11 @@ class CustomLoginView(LoginView):
             return '/teachers/'
         elif user.is_parent():
             return '/parents/'
+        elif user.is_superuser:
+            # Redirect superuser/admin to admin dashboard
+            return '/accounts/admin-dashboard/'
         elif user.is_admin() or user.is_staff:
-            # Redirect registrar/admin to registrar dashboard
+            # Redirect registrar to registrar dashboard
             return '/registrar/'
         else:
             return '/'
