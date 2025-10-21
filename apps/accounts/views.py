@@ -27,14 +27,15 @@ class CustomLoginView(LoginView):
     
     def get_success_url(self):
         user = self.request.user
+        # Check role first, then permissions
         if user.is_student():
             return '/students/'
         elif user.is_teacher():
             return '/teachers/'
         elif user.is_parent():
             return '/parents/'
-        elif user.is_superuser:
-            # Redirect superuser/admin to admin dashboard
+        elif user.username == 'security_admin' or (user.is_superuser and user.username == 'admin'):
+            # Redirect admin and security_admin to admin dashboard
             return '/accounts/admin-dashboard/'
         elif user.is_admin() or user.is_staff:
             # Redirect registrar to registrar dashboard
