@@ -1,57 +1,40 @@
 from django.db import migrations
 from django.contrib.auth.hashers import make_password
 
-
 def create_default_users(apps, schema_editor):
+    # Get the User model
     User = apps.get_model('accounts', 'User')
 
-    # Admin account
-    admin_username = 'admin'
-    admin_password = 'admin123'
-    if not User.objects.filter(username=admin_username).exists():
+    # Create admin user
+    if not User.objects.filter(username='admin').exists():
         User.objects.create(
-            username=admin_username,
-            email='admin@vbca.edu',
-            password=make_password(admin_password),
-            first_name='System',
-            last_name='Administrator',
+            username='admin',
+            password=make_password('admin123'),
             is_staff=True,
             is_superuser=True
         )
 
-    # Registrar account
-    registrar_username = 'crenz'
-    registrar_password = 'crenz123'
-    if not User.objects.filter(username=registrar_username).exists():
+    # Create security admin user
+    if not User.objects.filter(username='security_admin').exists():
         User.objects.create(
-            username=registrar_username,
-            email='crenz@vbca.edu',
-            password=make_password(registrar_password),
-            first_name='Registrar',
-            last_name='Administrator',
+            username='security_admin',
+            password=make_password('security123'),
+            is_staff=True,
+            is_superuser=True
+        )
+
+    # Create registrar user
+    if not User.objects.filter(username='crenz').exists():
+        User.objects.create(
+            username='crenz',
+            password=make_password('crenz123'),
             is_staff=True,
             is_superuser=False
         )
 
-    # Security Admin account
-    security_username = 'security_admin'
-    security_password = 'security123'
-    if not User.objects.filter(username=security_username).exists():
-        User.objects.create(
-            username=security_username,
-            email='security@vbca.edu',
-            password=make_password(security_password),
-            first_name='Security',
-            last_name='Administrator',
-            is_staff=True,
-            is_superuser=True
-        )
-
-
-def noop(apps, schema_editor):
-    # No reverse operation; users can be deleted manually if needed
+def reverse_default_users(apps, schema_editor):
+    # No reverse operation - users can be deleted manually if needed
     pass
-
 
 class Migration(migrations.Migration):
     dependencies = [
@@ -59,7 +42,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(create_default_users, noop),
+        migrations.RunPython(create_default_users, reverse_default_users),
     ]
-
-
